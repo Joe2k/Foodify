@@ -184,6 +184,11 @@ app.get("/account",function (req,res) {
         });
 });
 
+app.get("/logout",function (req,res) {
+    req.logout();
+    res.redirect("/");
+});
+
 app.post("/login",function (req,res) {
     const user= new User({
         username:req.body.email,
