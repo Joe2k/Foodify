@@ -171,7 +171,25 @@
 
 
         $input.val(value);
+        var allInputs = $( ":input" );
+        for(var i=0;i<allInputs.length;i++)
+        {
+            if(allInputs[i].name!="button") {
+                //console.log(allInputs[i].name, allInputs[i].value);
+                if(!sessionStorage.getItem(allInputs[i].name))
+                {
+                    sessionStorage.setItem(allInputs[i].name,"0");
+                }
+                //allInputs[i].val(parseInt(sessionStorage.getItem(allInputs[i].name)));
+                let name1=allInputs[i].name;
+                let newNum=parseInt(sessionStorage.getItem(allInputs[i].name));
+                //console.log(allInputs);
 
+                $(allInputs[i])[0].value=newNum;
+
+
+            }
+        }
 
     });
 
@@ -194,6 +212,25 @@
         total1=total1+parseInt($this[0].value);
         $(".total").text(total1);
         sessionStorage.setItem("total",total1);
+        var allInputs = $( ":input" );
+        for(var i=0;i<allInputs.length;i++)
+        {
+            if(allInputs[i].name!="button") {
+                //console.log(allInputs[i].name, allInputs[i].value);
+                if(!sessionStorage.getItem(allInputs[i].name))
+                {
+                    sessionStorage.setItem(allInputs[i].name,"0");
+                }
+                //allInputs[i].val(parseInt(sessionStorage.getItem(allInputs[i].name)));
+                let name1=allInputs[i].name;
+                let newNum=parseInt(sessionStorage.getItem(allInputs[i].name));
+                //console.log(allInputs);
+
+                $(allInputs[i])[0].value=newNum;
+
+
+            }
+        }
     });
 </script>
 </body>
