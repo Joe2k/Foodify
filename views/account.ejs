@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>My Account</title>
+    <link rel="stylesheet" href="home_assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
+    <link rel="stylesheet" href="home_assets/home_css/untitled.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom" style="color: rgb(194,74,74);background-color: rgb(255,255,255);">
+    <div class="container"><a class="navbar-brand" href="#">EMC Sale</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" style="color: rgb(242,0,0);">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" role="presentation"><a class="nav-link" href="#sell">Sell</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="#buy" style="color: rgba(255,255,255,0.5);">Buy</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header class="masthead text-center text-white">
+    <div class="masthead-content">
+        <div class="container">
+            <h1 class="masthead-heading mb-0">My Account</h1>
+            <h2 class="masthead-subheading mb-0">Hi <%=newname%></h2>
+        </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+</header>
+<section class="container">
+    <h2>Sold Items</h2>
+    <div class="container">
+        <div class="table-responsive border rounded-0 border-primary shadow-lg" style="margin: 20px 0px;border-style: dotted;">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="text-center">Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <%for(var i=0;i<docs.selling.length;i++){%>
+                    <td class="text-center"><%=docs.selling[i]%></td>
+                        <%}%>
+                </tr>
+                <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <h2>Bought Items</h2>
+
+    <div class="container">
+        <div class="table-responsive border rounded-0 border-primary shadow-lg" style="margin: 20px 0px;border-style: dotted;">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Qty</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <%for(var i=0;i<docs.orders.length;i++){%>
+                    <%for(const property in docs.orders[i]){%>
+                    <%if(property!="total"){%>
+                    <td class="text-center"><%=property%></td>
+                    <td class="text-center"><%=docs.orders[i][property]%></td>
+                    <%}%>
+                    <%}%>
+                    <%}%>
+                </tr>
+                <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer class="text-center">Made by Jonathan</footer>
+
+
+</section>
+</body>
+</html>

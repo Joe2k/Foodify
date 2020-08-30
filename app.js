@@ -176,6 +176,13 @@ app.get("/success",function (req,res) {
 app.get("/failure",function (req,res) {
     res.render("failure");
 });
+app.get("/account",function (req,res) {
+
+        User.find({name:req.user.name},function (err,docs) {
+            res.render("account",{docs:docs[0],newname:req.user.name});
+            console.log(docs[0]);
+        });
+});
 
 app.post("/login",function (req,res) {
     const user= new User({

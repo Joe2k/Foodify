@@ -5,13 +5,8 @@ html {
 #before{
     padding-top: 20px;
 }
-.total{
-    position: relative;
-    padding-top: 30px;
-}
-#cart{
 
-}
+
 
 
 
@@ -131,13 +126,15 @@ input[type=submit] {
 .total{
     font-size: 1.2em;
     position: relative;
-    top: 3px;
+    top: 30px;
+
 }
 
 #before{
     font-size: 1.2em;
     position: relative;
-    top: 3px;
+    top: 30px;
+
 }
 
 #cart{
