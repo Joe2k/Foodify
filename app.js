@@ -217,7 +217,7 @@ app.post("/register",function (req,res) {
                     console.log(doc);
             });
             passport.authenticate("local");
-            res.redirect("/home");
+            res.redirect("/login");
         }
         }
     );
