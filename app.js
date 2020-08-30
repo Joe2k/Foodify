@@ -88,7 +88,8 @@ app.get("/register",function (req,res) {
 });
 
 app.get("/home",function (req,res) {
-    res.render("home");
+    newname=req.user.name;
+    res.render("home",{newname:newname});
 });
 
 app.get("/buy",function (req,res) {

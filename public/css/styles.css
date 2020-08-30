@@ -2,6 +2,19 @@ html {
     scroll-behavior: smooth;
 }
 
+#before{
+    padding-top: 20px;
+}
+.total{
+    position: relative;
+    padding-top: 30px;
+}
+#cart{
+
+}
+
+
+
 .nav-link{
     text-align: center;
 }
@@ -111,7 +124,7 @@ input[type=submit] {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 10px;
-    padding-bottom: 50px;
+    padding-bottom: 70px;
     opacity: 80%;
 }
 
