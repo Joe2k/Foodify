@@ -1,0 +1,253 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.nav-link{
+    text-align: center;
+}
+
+#top{
+    padding-top: 80px;
+}
+
+* { box-sizing: border-box; }
+body {
+    font: 16px Arial;
+}
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+}
+input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+}
+input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: white;
+    color: orange;
+    border-bottom: 1px solid #d4d4d4;
+
+}
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: purple;
+}
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: purple;
+    color: cornflowerblue;
+}
+
+.minus-btn img {
+    margin-bottom: 3px;
+    width: 40px;
+}
+
+.plus-btn img {
+    margin-top: 2px;
+    width: 40px;
+    border: 0;
+}
+
+#subbut{
+    background-color: purple;
+    border-radius: 10px;
+}
+
+
+#typebox{
+    width: 10%;
+}
+
+.plus-btn{
+    border:0;
+    display: inline;
+}
+
+.minus-btn{
+    border:0;
+    display: inline;
+}
+
+.dropdown-menu-center {
+    right: auto;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    opacity: 80%;
+}
+
+.total{
+    font-size: 1.2em;
+    position: relative;
+    top: 3px;
+}
+
+#before{
+    font-size: 1.2em;
+    position: relative;
+    top: 3px;
+}
+
+#cart{
+    margin-left: 40px;
+    width: 40%;
+    margin-bottom: 10px;
+    position: relative; z-index: 597; float: right;
+}
+
+/*hr{*/
+/*    width: 70%;*/
+/*    border-style: solid;*/
+/*    border-color: black;*/
+/*    margin-top: 40px;*/
+/*}*/
+
+
+
+/*.jumbotron {*/
+/*    padding-top: 70px;*/
+/*}*/
+
+/*.responsive {*/
+/*    max-width: 50%;*/
+/*    height: auto;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*    display: block;*/
+/*    margin-top: 50px;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.footer {*/
+/*    position: fixed;*/
+/*    left: 0;*/
+/*    bottom: 0;*/
+/*    width: 100%;*/
+/*    height: 50px;*/
+/*    background-color: white;*/
+/*    padding-left: 20px;*/
+/*    padding-right: 20px;*/
+/*    padding-top: 10px;*/
+/*    padding-bottom: 50px;*/
+
+/*}*/
+
+/*.total{*/
+/*    font-size: 1.2em;*/
+/*    position: relative;*/
+/*    top: 3px;*/
+/*}*/
+
+/*#before{*/
+/*    font-size: 1.2em;*/
+/*    position: relative;*/
+/*    top: 3px;*/
+/*}*/
+
+/*#cart{*/
+/*    margin-left: 40px;*/
+/*    width: 40%;*/
+/*    margin-bottom: 10px;*/
+/*    position: relative; z-index: 597; float: right;*/
+/*}*/
+
+/*#total{*/
+/*    font-size: x-large;*/
+/*}*/
+
+/*#carthead{*/
+/*    margin-top: 70px;*/
+/*}*/
+
+/*table, th, td {*/
+/*    border: 1px solid black;*/
+/*}*/
+
+/*table, th, td {*/
+/*    border: 1px solid black;*/
+/*    border-collapse: collapse;*/
+/*}*/
+
+/*th, td {*/
+/*    padding: 15px;*/
+/*}*/
+
+/*th, td {*/
+/*    text-align: center;*/
+/*}*/
+
+/*table {*/
+/*    margin-top: 40px;*/
+/*}*/
+
+/*#totprice{*/
+/*    margin-top: 20px;*/
+/*}*/
+
+/*#details{*/
+/*    margin-top: 50px;*/
+/*}*/
+
+/*#titdet{*/
+
+/*    margin-bottom: 30px;*/
+/*}*/
+
+/*.suc{*/
+/*    margin-top: 100px;*/
+/*}*/
+
+/*#finalbtn{*/
+/*width: 50%;*/
+/*    display: block;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*    margin-top: 30px;*/
+/*}*/
+
+/*#lastfoot{*/
+/*    background-color: #e5e5e5;*/
+/*    padding-top: 10px;*/
+/*    padding-bottom: 10px;*/
+/*    margin-top: 20px;*/
+/*}*/
+

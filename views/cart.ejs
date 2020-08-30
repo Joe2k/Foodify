@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="cart-assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
+    <link rel="stylesheet" href="cart-assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="cart-assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
+    <link rel="stylesheet" href="cart-assets/css/untitled.css">
+</head>
+
+<body style="border-style: none;">
+<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom" style="color: rgb(194,74,74);background-color: rgb(255,255,255);">
+    <div class="container"><a class="navbar-brand" href="#">EMC Sale</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" style="color: rgb(242,0,0);">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/home">Home</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/buy">Shop</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/menu/starters">Starters</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/menu/mains" >Main Course</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="/menu/deserts">Deserts</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header class="masthead text-center text-white">
+    <div class="masthead-content">
+        <div class="container">
+            <h1 class="masthead-heading mb-0" style="border-style: none;">Cart</h1>
+        </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle">
+        <div></div><input type="search"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+</header>
+<section>
+    <form method="post" action="/cart">
+<div class="container">
+    <div class="table-responsive border rounded-0 border-primary shadow-lg" style="margin: 20px 0px;border-style: dotted;">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">Qty</th>
+                <th class="text-center">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%var totalPrice=0 %>
+
+            <%  docs.forEach(function(doc){ %>
+                <% var name1= doc.name %>
+                <% var qty= items[name1] %>
+                <% if ( qty >0 ){%>
+                    <% var newPrice=(doc.price*qty) %>
+                    <%totalPrice+=newPrice%>
+                    <tr>
+                        <td class="text-center"><%=name1%></td>
+                        <td class="text-center"><%=qty%></td>
+                        <td class="text-center"><%=newPrice%></td>
+                        <input type="hidden" name="<%=name1%>" value="<%=qty%>">
+                    </tr>
+                <%}%>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <h4 align="center" id="totprice">Total Price: Rs. <%=totalPrice%></h4>
+    <input type="hidden" name="total" value="<%=totalPrice%>">
+</div>
+<section class="container">
+<button class="btn btn-light" type="button"><a href="/buy"><i class="fa fa-caret-left"></i>&nbsp; Edit your order</a></button>
+</section>
+    <div class="container custom-control text-center custom-switch" style="margin: 20px 0px;">
+        <input required class="custom-control-input" type="checkbox" id="formCheck-1">
+        <label class="custom-control-label" for="formCheck-1">Check this to confirm your order.</label>
+        <button class="btn btn-primary btn-block" type="submit" style="text-align: center;">Submit my order</button>
+    </div>
+    </form>
+</section>
+
+<section></section>
+<section></section>
+<script src="cart-assets/js/jquery.min.js"></script>
+<script src="cart-assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -2,19 +2,22 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
-    <title>EMC</title>
+    <title>Register</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="assets/css/-Login-form-Page-BS4-.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
 
-<div class="container">
-    <div class="card bg-light">
-        <article class="card-body mx-auto" style="max-width: 400px;">
-            <h4 class="card-title mt-3 text-center">Create Account</h4>
+<div class="container-fluid">
+    <div class="row mh-100vh">
+        <div class="col-10 col-sm-8 col-md-6 col-lg-6 offset-1 offset-sm-2 offset-md-3 offset-lg-0 align-self-center d-lg-flex align-items-lg-center align-self-lg-stretch bg-white p-5 rounded rounded-lg-0 my-5 my-lg-0" id="login-block">
+            <div class="m-auto w-lg-75 w-xl-50">
+                <h2 class="text-info font-weight-light mb-5">Create Account</h2>
             <form method="post" action="/register">
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
@@ -39,7 +42,7 @@
                         <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                     </div>
                     <select name="area" class="form-control" required>
-                        <option selected=""> Delivery/Pick-up Area</option>
+                        <option selected=""> Delivery Area</option>
                         <option>I'm just here to test xD</option>
                         <option>Anna Nagar</option>
                         <option>Kilpauk</option>
@@ -54,11 +57,16 @@
                     <input name="password" class="form-control" placeholder="Create password" type="password" required>
                 </div> <!-- form-group// -->
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+                    <button type="submit" class="btn btn-info mt-2"> Create Account  </button>
                 </div> <!-- form-group// -->
-                <p class="text-center">Have an account? <a href="/login">Log In</a> </p>
+                <p class="mt-3 mb-0"><a class="text-info medium" href="/login"> Log In for existing users</a> </p>
             </form>
-        </article>
+            </div>
+
+        </div>
+        <div class="col-lg-6 d-flex align-items-end" id="bg-block" style="background-image:url(&quot;https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-1.2.1&amp;w=1000&amp;q=80&quot;);background-size:cover;background-position:center center;">
+            <p class="ml-auto small text-dark mb-2"><em>Photo by&nbsp;</em><a class="text-dark" href="https://unsplash.com/photos/v0zVmWULYTg?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank"><em>Aldain Austria</em></a><br></p>
+        </div>
     </div> <!-- card.// -->
 
 </div>
