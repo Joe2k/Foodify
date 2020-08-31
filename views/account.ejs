@@ -46,11 +46,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+
                     <%for(var i=0;i<docs.selling.length;i++){%>
+                    <tr>
                     <td class="text-center"><%=docs.selling[i]%></td>
+                    </tr>
                         <%}%>
-                </tr>
+
                 <tr></tr>
                 </tbody>
             </table>
@@ -70,22 +72,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+
                     <%for(var i=0;i<docs.orders.length;i++){%>
                     <%for(const property in docs.orders[i]){%>
                     <%if(property!="total"){%>
+                    <tr>
                     <td class="text-center"><%=property%></td>
                     <td class="text-center"><%=docs.orders[i][property]%></td>
+                    </tr>
                     <%}%>
                     <%}%>
                     <%}%>
-                </tr>
-                <tr></tr>
+
                 </tbody>
             </table>
         </div>
     </div>
-    <button class="btn btn-light btn-block" type="button"><a href="/buy"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <button class="btn btn-light btn-block" type="button"><a href="/home"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
             </svg>  &nbsp;Go Back</a></button>
     <footer class="container text-center">Made by Jonathan</footer>

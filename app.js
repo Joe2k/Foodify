@@ -194,20 +194,42 @@ app.post("/login",function (req,res) {
         username:req.body.email,
         password:req.body.password
     });
-    req.login(user, function (err) {
 
-        if(err)
-        {console.log(err);
-        res.redirect("/login");}
-        else{
-            passport.authenticate("local");
-            res.redirect("/home");
+    passport.authenticate('local', function (err, user, info) {
+        if(err){
+            res.json({success: false, message: err})
+        } else{
+            if (! user) {
+                res.redirect("/failure");
+                console.log(info);
+            } else{
+                req.login(user, function(err){
+                    if(err){
+                        console.log(err);
+                        res.redirect("/login");
+                    }else{
+
+                        res.redirect("/home");
+                        }
+                    });
+            }
         }
-    });
+    })(req, res);
+    // req.login(user, function (err) {
+    //
+    //     if(err)
+    //     {console.log(err);
+    //     res.redirect("/login");}
+    //     else{
+    //         passport.authenticate("local");
+    //         res.redirect("/home");
+    //     }
+    // });
 });
 
 app.post("/register",function (req,res) {
-    User.register({username: req.body.email},req.body.password,function (err,user) {
+    Users=new User({username : req.body.username});
+    User.register(Users,req.body.password,function (err,user) {
         if(err){
             res.redirect("/register");
             console.log(err);
@@ -215,7 +237,7 @@ app.post("/register",function (req,res) {
 
         else
         {
-            User.findOneAndUpdate({username: req.body.email},{name:req.body.name,phone:req.body.phone,area:req.body.area},function (err,doc) {
+            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area},function (err,doc) {
                 if(err)
                     console.log(err);
                 else
