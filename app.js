@@ -189,6 +189,10 @@ app.get("/logout",function (req,res) {
     res.redirect("/");
 });
 
+app.get("/reset",function (req,res) {
+    res.render("reset");
+});
+
 app.post("/login",function (req,res) {
     const user= new User({
         username:req.body.email,
@@ -316,6 +320,38 @@ app.post("/sell",function (req,res) {
             console.log(err);
     });
     res.redirect("/"+req.body.name+"/image");
+});
+
+app.post("/reset",function (req,res) {
+    // User.find({username:req.body.username},function (err,doc) {
+    //     if(err)
+    //         console.log(err);
+    //     console.log(doc);
+    //     // doc.setPassword(req.body.password,function (err) {
+    //     //     if(err)
+    //     //         res.redirect("/failure");
+    //     //     else{
+    //     //         doc.save();
+    //     //         res.redirect("/success");
+    //     //     }
+    //
+    //     // });
+    // });
+
+    User.findByUsername(req.body.username).then(function(sanitizedUser){
+        if (sanitizedUser){
+            sanitizedUser.setPassword(req.body.password, function(){
+                sanitizedUser.save();
+
+                res.redirect("/success");
+            });
+        } else {
+
+            res.redirect("/failure");
+        }
+    },function(err){
+        console.error(err);
+    })
 });
 
 let PORT=process.env.PORT || 3000;
