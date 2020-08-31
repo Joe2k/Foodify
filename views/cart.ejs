@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - Brand</title>
-    <link rel="stylesheet" href="cart-assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/cart-assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
-    <link rel="stylesheet" href="cart-assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="cart-assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
-    <link rel="stylesheet" href="cart-assets/css/untitled.css">
+    <link rel="stylesheet" href="/cart-assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/cart-assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
+    <link rel="stylesheet" href="/cart-assets/css/untitled.css">
 </head>
 
 <body style="border-style: none;">
@@ -74,18 +74,25 @@
     <input type="hidden" name="total" value="<%=totalPrice%>">
 </div>
 <section class="container">
-<button class="btn btn-light" type="button"><a href="/buy"><i class="fa fa-caret-left"></i>&nbsp; Edit your order</a></button>
+    <a href="/buy">
+<button class="btn btn-secondary" type="button"><i class="fa fa-caret-left"></i>&nbsp; Edit your order</button>
+    </a>
 </section>
-    <div class="container custom-control text-center custom-switch" style="margin: 20px 0px;">
+    <div class="container custom-control text-center custom-switch" style="margin: 20px auto 40px auto;">
         <input required class="custom-control-input" type="checkbox" id="formCheck-1">
         <label class="custom-control-label" for="formCheck-1">Check this to confirm your order.</label>
-        <button class="btn btn-primary btn-block" type="submit" style="text-align: center;">Submit my order</button>
+        <button class="btn btn-primary btn-block" type="submit" style="text-align: center; margin-top: 20px;">Submit my order</button>
     </div>
     </form>
 </section>
 
-<section></section>
-<section></section>
+<footer class="bg-black" style="padding-top: 30px;padding-bottom: 30px;">
+    <div class="container">
+        <p class="text-center text-white m-0 small">Made with <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="red" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+            </svg>  by Jonathan</p>
+    </div>
+</footer>
 <script src="cart-assets/js/jquery.min.js"></script>
 <script src="cart-assets/bootstrap/js/bootstrap.min.js"></script>
 </body>

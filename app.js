@@ -70,6 +70,10 @@ passport.deserializeUser(User.deserializeUser());
 
 var items={};
 var totalPrice=0;
+var forLoginPromt="";
+var forSuc="";
+var forReset="";
+var forLogin="";
 
 app.get("/",function (req,res) {
     if(req.isAuthenticated()){
@@ -80,7 +84,9 @@ app.get("/",function (req,res) {
 });
 
 app.get("/login",function (req,res) {
-    res.render("login");
+    res.render("login",{forLogin:forLogin,forLoginPromt:forLoginPromt});
+    forLogin="";
+    forLoginPromt="";
 });
 
 app.get("/register",function (req,res) {
@@ -88,78 +94,108 @@ app.get("/register",function (req,res) {
 });
 
 app.get("/home",function (req,res) {
-    newname=req.user.name;
-    res.render("home",{newname:newname});
+    if(req.isAuthenticated()){
+        newname=req.user.name;
+        res.render("home",{newname:newname});
+    }
+    else
+        res.redirect("/login");
+
 });
 
 app.get("/buy",function (req,res) {
-    var arr=[];
-    Item.find(function (err,docs) {
-        docs.forEach(function (doc) {
-            arr.push(doc.name);
-            arr.push(doc.by);
-            if(!(doc.name in items))
-            {
-                items[doc.name]=0;
-            }
+    if(req.isAuthenticated()){
+        var arr=[];
+        Item.find(function (err,docs) {
+            docs.forEach(function (doc) {
+                arr.push(doc.name);
+                arr.push(doc.by);
+                if(!(doc.name in items))
+                {
+                    items[doc.name]=0;
+                }
 
+            });
+            console.log(arr);
+            Item.find({}).sort({"sold":-1}).exec(function (err,docs1) {
+                res.render("buy",{items:docs1,arr:arr});
+            });
         });
-        console.log(arr);
-        Item.find({}).sort({"sold":-1}).exec(function (err,docs1) {
-            res.render("buy",{items:docs1,arr:arr});
-        });
-    });
+    }
+    else
+        res.redirect("/login");
+
 
 
 
 });
 
 app.get("/menu/:someurl",function (req,res) {
-    const menuname=req.params.someurl;
-    Item.find(function (err,docs) {
-        res.render("menu",{items:docs,menuname:menuname});
-    });
+    if(req.isAuthenticated()){
+        const menuname=req.params.someurl;
+        Item.find(function (err,docs) {
+            res.render("menu",{items:docs,menuname:menuname});
+        });
+    }
+    else
+        res.redirect("/login");
+
 });
 
 app.get("/menu/:someurl/:somename",function (req,res) {
-    const menuname=req.params.someurl;
-    const filtername=req.params.somename;
-    if(filtername==="pop")
-    {
-        Item.find({}).sort({"sold":-1}).exec(function (err,docs) {
-            res.render("menu",{items:docs,menuname:menuname})
-        });
+    if(req.isAuthenticated()){
+        const menuname=req.params.someurl;
+        const filtername=req.params.somename;
+        if(filtername==="pop")
+        {
+            Item.find({}).sort({"sold":-1}).exec(function (err,docs) {
+                res.render("menu",{items:docs,menuname:menuname})
+            });
+        }
+        if(filtername==="asc")
+        {
+            Item.find({}).sort({"price":1}).exec(function (err,docs) {
+                res.render("menu",{items:docs,menuname:menuname})
+            });
+        }
+        if(filtername==="dsc")
+        {
+            Item.find({}).sort({"price":-1}).exec(function (err,docs) {
+                res.render("menu",{items:docs,menuname:menuname})
+            });
+        }
     }
-    if(filtername==="asc")
-    {
-        Item.find({}).sort({"price":1}).exec(function (err,docs) {
-            res.render("menu",{items:docs,menuname:menuname})
-        });
-    }
-    if(filtername==="dsc")
-    {
-        Item.find({}).sort({"price":-1}).exec(function (err,docs) {
-            res.render("menu",{items:docs,menuname:menuname})
-        });
-    }
+    else
+        res.redirect("/login");
+
 });
 
 app.get("/search/:searchpart",function (req,res) {
-    const searchname=req.params.searchpart;
-    Item.find({ name: { $regex: searchname, $options: "i" } }, function(err, docs1) {
-        Item.find({ by: { $regex: searchname, $options: "i" } }, function(err, docs2){
-            Item.find(function (err,docs) {
-                res.render("search", {docs:docs,docs2: docs2, docs1: docs1});
+    if(req.isAuthenticated()){
+        const searchname=req.params.searchpart;
+        Item.find({ name: { $regex: searchname, $options: "i" } }, function(err, docs1) {
+            Item.find({ by: { $regex: searchname, $options: "i" } }, function(err, docs2){
+                Item.find(function (err,docs) {
+                    res.render("search", {docs:docs,docs2: docs2, docs1: docs1});
+                });
             });
         });
-    });
+    }
+    else
+        res.redirect("/login");
+
 
 });
 
 app.get("/cart",function (req,res) {
-    Item.find(function (err,docs) {
-        res.render("cart",{docs:docs,items:items});
-    });
+    if(req.isAuthenticated()){
+        Item.find(function (err,docs) {
+            res.render("cart",{docs:docs,items:items});
+        });
+    }
+    else
+        res.redirect("/login");
+
 });
 
 app.get("/:somename/image",function (req,res) {
@@ -167,21 +203,32 @@ app.get("/:somename/image",function (req,res) {
 });
 
 app.get("/sell",function (req,res){
-    res.render("sell");
+    if(req.isAuthenticated()){
+        res.render("sell");
+    }
+    else
+        res.redirect("/login");
+
 });
 
 app.get("/success",function (req,res) {
-    res.render("success");
+    res.render("success",{forSuc:forSuc});
+    forSuc="";
 });
 app.get("/failure",function (req,res) {
     res.render("failure");
 });
 app.get("/account",function (req,res) {
-
+    if(req.isAuthenticated()){
         User.find({name:req.user.name},function (err,docs) {
             res.render("account",{docs:docs[0],newname:req.user.name});
             console.log(docs[0]);
         });
+    }
+    else
+        res.redirect("/login");
+
+
 });
 
 app.get("/logout",function (req,res) {
@@ -190,7 +237,8 @@ app.get("/logout",function (req,res) {
 });
 
 app.get("/reset",function (req,res) {
-    res.render("reset");
+    res.render("reset",{forReset:forReset});
+    forReset="";
 });
 
 app.post("/login",function (req,res) {
@@ -204,7 +252,8 @@ app.post("/login",function (req,res) {
             res.json({success: false, message: err})
         } else{
             if (! user) {
-                res.redirect("/failure");
+                forLoginPromt="yes";
+                res.redirect("/login");
                 console.log(info);
             } else{
                 req.login(user, function(err){
@@ -248,6 +297,7 @@ app.post("/register",function (req,res) {
                     console.log(doc);
             });
             passport.authenticate("local");
+            forLogin="again";
             res.redirect("/login");
         }
         }
@@ -283,6 +333,7 @@ app.post("/cart",function (req,res) {
             res.redirect("/failure");
 
         else {
+            forSuc="buy";
             res.redirect("/success");
         }
     });
@@ -300,6 +351,7 @@ app.post('/image', upload.single('photo'), (req, res) => {
                     console.log(err);
             });
         });
+        forSuc="sell";
         res.redirect("/success");
     }
     else throw 'error';
@@ -342,12 +394,12 @@ app.post("/reset",function (req,res) {
         if (sanitizedUser){
             sanitizedUser.setPassword(req.body.password, function(){
                 sanitizedUser.save();
-
-                res.redirect("/success");
+                forLogin="again";
+                res.redirect("/login");
             });
         } else {
-
-            res.redirect("/failure");
+            forReset="yes";
+            res.redirect("/reset");
         }
     },function(err){
         console.error(err);
