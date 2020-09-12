@@ -39,12 +39,15 @@
     <div class="bg-circle-3 bg-circle"></div>
 
 </header>
-<div class="container" style="padding-top: 20px;">
+<div class="container text-center" style="padding-top: 20px;">
     <form action="/image" method="post" enctype="multipart/form-data">
-        <label>Upload your dish image</label>
+        <h3>Upload your dish image</h3>
         <input hidden name="somename" value="<%=newname%>">
-        <input class="form-control-file" type="file" accept="image/*" name="photo" >
-        <input class="btn btn-primary mt-3" type="submit" value="upload">
+        <div class="text-center">
+            <input class="form-control-file" style="background-color: #ff6a00;color: white;max-width: 300px; margin-left: auto; margin-right: auto;" type="file" accept="image/*" name="photo" >
+        </div>
+
+        <button class="btn btn-primary" type="submit" style="text-align: center; margin-top: 20px;">Upload</button>
     </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

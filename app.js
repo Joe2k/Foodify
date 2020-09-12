@@ -299,6 +299,7 @@ app.post("/register",function (req,res) {
             passport.authenticate("local");
             forLogin="again";
             res.redirect("/login");
+
         }
         }
     );
