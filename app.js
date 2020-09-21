@@ -74,13 +74,11 @@ var forLoginPromt="";
 var forSuc="";
 var forReset="";
 var forLogin="";
+var forLogout="no";
 
 app.get("/",function (req,res) {
-    if(req.isAuthenticated()){
-        res.redirect("/home");
-    }
-    else
-        res.redirect("/login");
+    res.redirect("/home");
+
 });
 
 app.get("/login",function (req,res) {
@@ -96,15 +94,14 @@ app.get("/register",function (req,res) {
 app.get("/home",function (req,res) {
     if(req.isAuthenticated()){
         newname=req.user.name;
-        res.render("home",{newname:newname});
+        res.render("home",{newname:newname,forLogout:forLogout});
     }
     else
-        res.redirect("/login");
-
+        res.render("home",{newname:"",forLogout:forLogout});
+    forLogout="no";
 });
 
 app.get("/buy",function (req,res) {
-    if(req.isAuthenticated()){
         var arr=[];
         Item.find(function (err,docs) {
             docs.forEach(function (doc) {
@@ -116,34 +113,23 @@ app.get("/buy",function (req,res) {
                 }
 
             });
-            console.log(arr);
+            //console.log(arr);
             Item.find({}).sort({"sold":-1}).exec(function (err,docs1) {
                 res.render("buy",{items:docs1,arr:arr});
             });
         });
-    }
-    else
-        res.redirect("/login");
-
-
-
-
 });
 
 app.get("/menu/:someurl",function (req,res) {
-    if(req.isAuthenticated()){
         const menuname=req.params.someurl;
         Item.find(function (err,docs) {
             res.render("menu",{items:docs,menuname:menuname});
         });
-    }
-    else
-        res.redirect("/login");
 
 });
 
 app.get("/menu/:someurl/:somename",function (req,res) {
-    if(req.isAuthenticated()){
+
         const menuname=req.params.someurl;
         const filtername=req.params.somename;
         if(filtername==="pop")
@@ -164,14 +150,9 @@ app.get("/menu/:someurl/:somename",function (req,res) {
                 res.render("menu",{items:docs,menuname:menuname})
             });
         }
-    }
-    else
-        res.redirect("/login");
-
 });
 
 app.get("/search/:searchpart",function (req,res) {
-    if(req.isAuthenticated()){
         const searchname=req.params.searchpart;
         Item.find({ name: { $regex: searchname, $options: "i" } }, function(err, docs1) {
             Item.find({ by: { $regex: searchname, $options: "i" } }, function(err, docs2){
@@ -180,11 +161,6 @@ app.get("/search/:searchpart",function (req,res) {
                 });
             });
         });
-    }
-    else
-        res.redirect("/login");
-
-
 });
 
 app.get("/cart",function (req,res) {
@@ -193,8 +169,11 @@ app.get("/cart",function (req,res) {
             res.render("cart",{docs:docs,items:items});
         });
     }
-    else
+    else{
+        forLogin="cart";
         res.redirect("/login");
+    }
+
 
 });
 
@@ -206,9 +185,10 @@ app.get("/sell",function (req,res){
     if(req.isAuthenticated()){
         res.render("sell");
     }
-    else
+    else{
+        forLogin="sell";
         res.redirect("/login");
-
+    }
 });
 
 app.get("/success",function (req,res) {
@@ -222,7 +202,7 @@ app.get("/account",function (req,res) {
     if(req.isAuthenticated()){
         User.find({name:req.user.name},function (err,docs) {
             res.render("account",{docs:docs[0],newname:req.user.name});
-            console.log(docs[0]);
+            //console.log(docs[0]);
         });
     }
     else
@@ -233,7 +213,8 @@ app.get("/account",function (req,res) {
 
 app.get("/logout",function (req,res) {
     req.logout();
-    res.redirect("/");
+    forLogout="yes";
+    res.redirect("/home");
 });
 
 app.get("/reset",function (req,res) {
@@ -261,8 +242,12 @@ app.post("/login",function (req,res) {
                         console.log(err);
                         res.redirect("/login");
                     }else{
-
-                        res.redirect("/home");
+                        if(req.body.type==="cart")
+                            res.redirect("/cart");
+                        else if(req.body.type==="sell")
+                            res.redirect("/sell");
+                        else
+                            res.redirect("/home");
                         }
                     });
             }

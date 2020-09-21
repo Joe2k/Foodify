@@ -18,9 +18,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive" style="color: rgb(242,0,0);">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item" role="presentation"><a class="nav-link" href="#sell">Sell</a></li>
-                <li class="nav-item" role="presentation"><a class="nav-link" href="#buy" style="color: rgba(255,255,255,0.5);">Buy</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" href="#buy">Buy</a></li>
+                <%if(newname!=""){%>
                 <li class="nav-item" role="presentation"><a class="nav-link" href="/account">My Account</a></li>
                 <li class="nav-item" role="presentation"><a class="nav-link" href="/logout">Log Out</a></li>
+                <%}%>
+                <%if(newname==""){%>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="/login">Log In</a></li>
+                <%}%>
             </ul>
         </div>
     </div>
@@ -29,7 +34,12 @@
     <div class="masthead-content">
         <div class="container">
             <h1 class="masthead-heading mb-0">Food.</h1>
+            <%if(newname!=""){%>
             <h2 class="masthead-subheading mb-0">Hi <%=newname%></h2>
+            <%}%>
+            <%if(newname==""){%>
+            <a href="/login"><button class="btn btn-light" style="color: #ee0979; font-weight: 600!important; font-family: Catamaran;">Login</button> </a>
+            <%}%>
         </div>
     </div>
     <div class="bg-circle-1 bg-circle"></div>
@@ -70,6 +80,7 @@
             </div>
         </div>
     </div>
+    <input hidden id="logout" value="<%=forLogout%>" name="logout">
 </section>
 <section></section>
 <footer class="py-5 bg-black">
@@ -87,6 +98,10 @@
             $(this).collapse('hide');
         }
     });
+    var ele=$("#logout");
+    if(ele[0].value==="yes")
+        sessionStorage.clear();
+    console.log(ele[0].value);
 </script>
 </body>
 
