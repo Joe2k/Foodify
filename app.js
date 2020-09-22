@@ -227,7 +227,7 @@ app.get("/reset",function (req,res) {
 });
 
 app.get("/mail",function (req,res) {
-    var link="https://desolate-shore-11420.herokuapp.com/mail/verify"+userTransfer;
+    var link="https://desolate-shore-11420.herokuapp.com/mail/verify/"+userTransfer;
     const msg = {
         to: userTransfer,
         from: 'jonathansamuel2k@gmail.com', // Use the email address or domain you verified above
@@ -418,7 +418,7 @@ app.get("/mail",function (req,res) {
             '                <tr>\n' +
             '                <td align="center" bgcolor="#eac96c" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">\n' +
 
-            '                  <a href="+link+" style="background-color:#eac96c; border:0px solid #333333; border-color:#333333; border-radius:0px; border-width:0px; color:#000000; display:inline-block; font-size:16px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:20px 30px 20px 30px; text-align:center; text-decoration:none; border-style:solid; font-family:inherit;" target="_blank">Confirm Email</a>\n' +
+            '                  <a href='+link+' style="background-color:#eac96c; border:0px solid #333333; border-color:#333333; border-radius:0px; border-width:0px; color:#000000; display:inline-block; font-size:16px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:20px 30px 20px 30px; text-align:center; text-decoration:none; border-style:solid; font-family:inherit;" target="_blank">Confirm Email</a>\n' +
 
             '                   </td>\n' +
             '                </tr>\n' +
