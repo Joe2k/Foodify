@@ -596,6 +596,7 @@ app.get("/mail/verify/:checkname",function (req,res){
             console.log(err);
 
     });
+    res.render("mail");
 });
 
 app.post("/login",function (req,res) {
