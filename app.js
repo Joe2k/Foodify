@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema({
     area: String,
     phone: String,
     orders: Array,
-    selling: Array
+    selling: Array,
+    emailVerify: bool
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -588,8 +589,13 @@ app.get("/mail",function (req,res) {
 });
 
 app.get("/mail/verify/:checkname",function (req,res){
-    console.log("success");
-    console.log(req.params);
+    //console.log("success");
+    //console.log(req.params);
+    User.findOneAndUpdate({username: req.params.checkname},{emailVerify:true},function (err,doc) {
+        if(err)
+            console.log(err);
+
+    });
 });
 
 app.post("/login",function (req,res) {
@@ -645,11 +651,10 @@ app.post("/register",function (req,res) {
 
         else
         {
-            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area},function (err,doc) {
+            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area,emailVerify:false},function (err,doc) {
                 if(err)
                     console.log(err);
-                else
-                    console.log(doc);
+
             });
             passport.authenticate("local");
             forLogin="again";
