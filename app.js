@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
     phone: String,
     orders: Array,
     selling: Array,
-    emailVerify: bool
+    emailVerify: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
