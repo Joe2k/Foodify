@@ -61,7 +61,12 @@
                 <option>Deserts</option>
             </select>
         </div> <!-- form-group end.// -->
+        <%if(email===true){%>
         <button class="btn btn-primary" type="submit">Submit</button>
+        <%}%>
+        <%if(email===false){%>
+        <p style="padding-top: 20px;color: deeppink;">Please verify your email by clicking the link in the mail sent to your email to proceed.</p>
+        <%}%>
     </form>
 </div>
 

@@ -170,8 +170,11 @@ app.get("/search/:searchpart",function (req,res) {
 
 app.get("/cart",function (req,res) {
     if(req.isAuthenticated()){
-        Item.find(function (err,docs) {
-            res.render("cart",{docs:docs,items:items});
+        User.find({name:req.user.name},function (err,docs1) {
+            //console.log(docs1[0].emailVerify);
+            Item.find(function (err, docs) {
+                res.render("cart", {docs: docs, items: items, email:docs1[0].emailVerify });
+            });
         });
     }
     else{
@@ -188,7 +191,9 @@ app.get("/:somename/image",function (req,res) {
 
 app.get("/sell",function (req,res){
     if(req.isAuthenticated()){
-        res.render("sell");
+        User.find({name:req.user.name},function (err,docs1) {
+            res.render("sell",{email:docs1[0].emailVerify});
+        });
     }
     else{
         forLogin="sell";
