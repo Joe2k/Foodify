@@ -78,19 +78,29 @@
 <button class="btn btn-secondary" type="button"><i class="fa fa-caret-left"></i>&nbsp; Edit your order</button>
     </a>
 </section>
-        <%if(email===true){%>
+        <%if(email===true && phone===true){%>
     <div class="container custom-control text-center custom-switch" style="margin: 20px auto 40px auto;">
         <input required class="custom-control-input" type="checkbox" id="formCheck-1">
         <label class="custom-control-label" for="formCheck-1">Check this to confirm your order.</label>
         <button class="btn btn-primary btn-block" type="submit" style="text-align: center; margin-top: 20px;">Submit my order</button>
     </div>
         <%}%>
+    </form>
+
+        <%if(phone===false){%>
+        <form method="get" action="/phone">
+            <input name="phoneType" value="cart" hidden>
+        <div class="container custom-control text-center custom-switch" style="margin: 20px auto 40px auto;">
+            <button type="submit" class="btn btn-primary">Verify mobile number</button>
+        </div>
+        </form>
+        <%}%>
         <%if(email===false){%>
         <div class="container custom-control text-center custom-switch" style="margin: 20px auto 40px auto;">
         <p style="padding-top: 20px;color: deeppink;">Please verify your email by clicking the link in the mail sent to your email to proceed.</p>
         </div>
         <%}%>
-    </form>
+
 </section>
 
 <footer class="bg-black" style="padding-top: 30px;padding-bottom: 30px;">

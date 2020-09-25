@@ -61,13 +61,22 @@
                 <option>Deserts</option>
             </select>
         </div> <!-- form-group end.// -->
-        <%if(email===true){%>
+        <%if(email===true && phone===true){%>
         <button class="btn btn-primary" type="submit">Submit</button>
+        <%}%>
+    </form>
+        <%if(phone===false){%>
+            <form method="get" action="/phone">
+                <input name="phoneType" value="cart" hidden>
+                <div class="container custom-control text-center custom-switch" style="margin: 20px auto 40px auto;">
+                    <button type="submit" class="btn btn-primary">Verify mobile number</button>
+                </div>
+            </form>
         <%}%>
         <%if(email===false){%>
         <p style="padding-top: 20px;color: deeppink;">Please verify your email by clicking the link in the mail sent to your email to proceed.</p>
         <%}%>
-    </form>
+
 </div>
 
 <footer class="bg-black" style="padding-top: 30px;padding-bottom: 30px;">

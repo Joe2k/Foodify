@@ -10,6 +10,7 @@ const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const upload = multer({dest: __dirname + '/uploads/images'});
 const sgMail = require('@sendgrid/mail');
+const crypto = require('crypto');
 
 const app = express();
 
@@ -22,6 +23,15 @@ cloudinary.config({
 });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const accountSid = process.env.PHONE_ID;
+const authToken = process.env.PHONE_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+var serid;
+
+client.verify.services.create({friendlyName: 'Food App'})
+    .then(service => serid=service.sid);
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -49,7 +59,9 @@ const userSchema = new mongoose.Schema({
     phone: String,
     orders: Array,
     selling: Array,
-    emailVerify: Boolean
+    emailVerify: Boolean,
+    emailToken: String,
+    phoneVerify: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -81,8 +93,21 @@ var forLogin="";
 var forLogout="no";
 var userTransfer="";
 
+
 app.get("/",function (req,res) {
     res.redirect("/home");
+
+});
+
+app.get("/phone",function (req,res){
+    User.find({username:req.user.username},function (err,docs1) {
+        client.verify.services(serid)
+            .verifications
+            .create({to: docs1[0].phone, channel: 'sms'})
+            .then(verification => console.log(verification.status));
+    });
+
+   res.render("phone",{phoneType:req.body.phoneType});
 
 });
 
@@ -99,11 +124,14 @@ app.get("/register",function (req,res) {
 app.get("/home",function (req,res) {
     if(req.isAuthenticated()){
         newname=req.user.name;
+        //console.log(req.user.username);
         res.render("home",{newname:newname,forLogout:forLogout});
     }
     else
         res.render("home",{newname:"",forLogout:forLogout});
     forLogout="no";
+
+
 });
 
 app.get("/buy",function (req,res) {
@@ -170,10 +198,10 @@ app.get("/search/:searchpart",function (req,res) {
 
 app.get("/cart",function (req,res) {
     if(req.isAuthenticated()){
-        User.find({name:req.user.name},function (err,docs1) {
+        User.find({username:req.user.username},function (err,docs1) {
             //console.log(docs1[0].emailVerify);
             Item.find(function (err, docs) {
-                res.render("cart", {docs: docs, items: items, email:docs1[0].emailVerify });
+                res.render("cart", {docs: docs, items: items, email:docs1[0].emailVerify, phone:docs1[0].phoneVerify });
             });
         });
     }
@@ -191,8 +219,8 @@ app.get("/:somename/image",function (req,res) {
 
 app.get("/sell",function (req,res){
     if(req.isAuthenticated()){
-        User.find({name:req.user.name},function (err,docs1) {
-            res.render("sell",{email:docs1[0].emailVerify});
+        User.find({username:req.user.username},function (err,docs1) {
+            res.render("sell",{email:docs1[0].emailVerify,phone:docs1[0].phoneVerify});
         });
     }
     else{
@@ -210,7 +238,7 @@ app.get("/failure",function (req,res) {
 });
 app.get("/account",function (req,res) {
     if(req.isAuthenticated()){
-        User.find({name:req.user.name},function (err,docs) {
+        User.find({username:req.user.username},function (err,docs) {
             res.render("account",{docs:docs[0],newname:req.user.name});
             //console.log(docs[0]);
         });
@@ -590,18 +618,68 @@ app.get("/mail",function (req,res) {
             }
         });
     userTransfer="";
+
     res.redirect("/login");
 });
 
-app.get("/mail/verify/:checkname",function (req,res){
+app.get("/verify/:checkname",async (req,res,next) => {
     //console.log("success");
     //console.log(req.params);
-    User.findOneAndUpdate({username: req.params.checkname},{emailVerify:true},function (err,doc) {
-        if(err)
-            console.log(err);
+    try {
+        const user = await User.findOne({ emailToken: req.params.checkname});
+        if(!user)
+            console.log("Error");
+        else{
+            user.emailToken= null;
+            user.emailVerify= true;
+            await user.save();
+            await req.login(user,async (err) => {
+                if(err) return next(err);
 
+                const redirectUrl= req.session.redirectTo || "/";
+                delete req.session.redirectTo;
+                res.redirect(redirectUrl);
+            });
+        }
+    } catch(error){
+        console.log(error);
+        res.redirect("/");
+    }
+    // User.findOneAndUpdate({username: req.params.checkname},{emailVerify:true},function (err,doc) {
+    //     if(err)
+    //         console.log(err);
+    //
+    // });
+    // res.render("mail");
+});
+
+app.post("/phone",function (req,res){
+
+    User.find({username:req.user.username},function (err,docs1) {
+        client.verify.services(serid)
+            .verificationChecks
+            .create({to: docs1[0].phone, code: req.body.password})
+            .then(verification_check => {
+                console.log(verification_check.status);
+                if(verification_check.status=="approved")
+                {
+                    console.log("yes");
+                    User.findOneAndUpdate({username: req.user.username}, {phoneVerify: true}, function (err, doc) {
+                        if (err)
+                            console.log(err);
+
+                    });
+                }
+            });
     });
-    res.render("mail");
+
+    if(req.body.phoneType==="cart"){
+        res.redirect("/cart");
+    }
+    else if(req.body.phoneType==="sell")
+        res.redirect("/sell");
+    else
+        res.redirect("/home");
 });
 
 app.post("/login",function (req,res) {
@@ -624,13 +702,14 @@ app.post("/login",function (req,res) {
                         console.log(err);
                         res.redirect("/login");
                     }else{
+
                         if(req.body.type==="cart")
                             res.redirect("/cart");
                         else if(req.body.type==="sell")
                             res.redirect("/sell");
                         else
                             res.redirect("/home");
-                        }
+                         }
                     });
             }
         }
@@ -647,7 +726,7 @@ app.post("/login",function (req,res) {
     // });
 });
 
-app.post("/register",function (req,res) {
+app.post("/register",async function (req,res) {
     Users=new User({username : req.body.username});
     User.register(Users,req.body.password,function (err,user) {
         if(err){
@@ -655,19 +734,56 @@ app.post("/register",function (req,res) {
             console.log(err);
         }
 
-        else
-        {
-            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area,emailVerify:false},function (err,doc) {
+            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area,emailVerify:false,phoneVerify:false,emailToken: crypto.randomBytes(64).toString('hex')},function (err,doc) {
                 if(err)
                     console.log(err);
 
             });
-            passport.authenticate("local");
-            forLogin="again";
-            userTransfer=req.body.username;
-            res.redirect("/mail");
+            passport.authenticate("local")(req,res,async function (){
 
-        }
+                // sgMail
+                //     .send(msg)
+                //     .then(() => {}, error => {
+                //         console.error(error);
+                //
+                //         if (error.response) {
+                //             console.error(error.response.body)
+                //         }
+                //     });
+                // res.redirect("/home");
+            });
+
+            User.findOne({username: req.body.username}, async function (err,doc){
+                var link=""
+                if(req.headers.host==="localhost:3000")
+                 link="http://"+req.headers.host+"/verify/"+doc.emailToken;
+                else
+                    link="https://"+req.headers.host+"/verify/"+doc.emailToken;
+                const msg = {
+                    to: req.body.username,
+                    from: 'jonathansamuel2k@gmail.com', // Use the email address or domain you verified above
+                    subject: 'Sending with Twilio SendGrid is Fun',
+                    text: 'and easy to do anywhere, even with Node.js',
+                    html: "<h1>Thanks for registering to our food app</h1>" +
+                        "<p>Please click the link below to verify your e-mail</p>" +
+                        "<a href="+link+"><button>Verify my E-Mail</button></a>"
+                }
+                try{
+                    await sgMail.send(msg);
+
+                    res.redirect("/phone");
+                } catch(error){
+
+                    res.redirect("/register");
+                }
+            });
+
+
+            // userTransfer=req.body.username;
+            // forLogin="again";
+            // res.redirect("/mail");
+
+
         }
     );
 });
@@ -695,7 +811,7 @@ app.post("/cart/in",function (req,res) {
 
 app.post("/cart",function (req,res) {
     console.log(req.user.name);
-    User.findOneAndUpdate({name:req.user.name},{$push: { orders: req.body }}, function (err,doc) {
+    User.findOneAndUpdate({username:req.user.username},{$push: { orders: req.body }}, function (err,doc) {
 
         if(err)
             res.redirect("/failure");
@@ -735,7 +851,7 @@ app.post("/sell",function (req,res) {
     else if(req.body.category==="Deserts")
         newname="deserts";
     Item.create({name:req.body.name,discription:req.body.disc,price:req.body.price,category:"food",subcategory:newname,by:req.user.name,sold:"0",veg:true});
-    User.findOneAndUpdate({name:req.user.name},{$push: { selling: req.body.name }}, function (err,doc) {
+    User.findOneAndUpdate({username:req.user.username},{$push: { selling: req.body.name }}, function (err,doc) {
         if(err)
             console.log(err);
     });
