@@ -55,7 +55,8 @@ const userSchema = new mongoose.Schema({
     username: String,
     password: String,
     name: String,
-    area: String,
+    lat: Number,
+    long: Number,
     phone: String,
     orders: Array,
     selling: Array,
@@ -734,7 +735,7 @@ app.post("/register",async function (req,res) {
             console.log(err);
         }
 
-            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,area:req.body.area,emailVerify:false,phoneVerify:false,emailToken: crypto.randomBytes(64).toString('hex')},function (err,doc) {
+            User.findOneAndUpdate({username: req.body.username},{name:req.body.name,phone:req.body.phone,emailVerify:false,phoneVerify:false,emailToken: crypto.randomBytes(64).toString('hex'),lat: parseFloat(req.body.lat) , long: parseFloat(req.body.long)},function (err,doc) {
                 if(err)
                     console.log(err);
 
