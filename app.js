@@ -77,7 +77,10 @@ const Item =mongoose.model("Item",{
     discription:String,
     price:Number,
     sold:Number,
-    veg:Boolean
+    veg:Boolean,
+    lat: Number,
+    long: Number,
+    distance: Number
 });
 
 passport.use(User.createStrategy());
@@ -93,6 +96,17 @@ var forReset="";
 var forLogin="";
 var forLogout="no";
 var userTransfer="";
+
+function haversine_distance(lat1, long1, lat2,long2) {
+    var R = 6371.0710; // Radius of the Earth in miles
+    var rlat1 = lat1 * (Math.PI/180); // Convert degrees to radians
+    var rlat2 = lat2 * (Math.PI/180); // Convert degrees to radians
+    var difflat = rlat2-rlat1; // Radian difference (latitudes)
+    var difflon = (long2-long1) * (Math.PI/180); // Radian difference (longitudes)
+
+    var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+    return d;
+}
 
 
 app.get("/",function (req,res) {
@@ -155,33 +169,71 @@ app.get("/buy",function (req,res) {
 });
 
 app.get("/menu/:someurl",function (req,res) {
-        const menuname=req.params.someurl;
+    var login="";
+    var dis="no";
+    if(req.isAuthenticated()){
+        login="yes";
+    }
+    else
+        login="no";
+    const menuname=req.params.someurl;
         Item.find(function (err,docs) {
-            res.render("menu",{items:docs,menuname:menuname});
+            res.render("menu",{items:docs,menuname:menuname,login:login,dis:dis});
         });
 
 });
 
 app.get("/menu/:someurl/:somename",function (req,res) {
-
+    var login="";
+    if(req.isAuthenticated()){
+        login="yes";
+    }
+    else
+        login="no";
         const menuname=req.params.someurl;
         const filtername=req.params.somename;
+        var dis="";
         if(filtername==="pop")
         {
+            dis="no";
             Item.find({}).sort({"sold":-1}).exec(function (err,docs) {
-                res.render("menu",{items:docs,menuname:menuname})
+                res.render("menu",{items:docs,menuname:menuname,login:login,dis:dis})
             });
         }
         if(filtername==="asc")
         {
+            dis="no";
             Item.find({}).sort({"price":1}).exec(function (err,docs) {
-                res.render("menu",{items:docs,menuname:menuname})
+                res.render("menu",{items:docs,menuname:menuname,login:login,dis:dis})
             });
         }
         if(filtername==="dsc")
         {
+            dis="no";
             Item.find({}).sort({"price":-1}).exec(function (err,docs) {
-                res.render("menu",{items:docs,menuname:menuname})
+                res.render("menu",{items:docs,menuname:menuname,login:login,dis:dis})
+            });
+        }
+        if(filtername==="dis")
+        {
+            dis="yes";
+            //Item.updateMany({},{distance:haversine_distance(req.user.lat,req.user.long,lat,long)});
+            //console.log("hii");
+            Item.find({},function (err,arr){
+                //console.log(arr.length);
+                for(var i=0;i<arr.length;i++) {
+                    Item.findOne({name:arr[i].name},function (err2,doc){
+                        //console.log(doc);
+                        doc.distance = haversine_distance(req.user.lat, req.user.long, doc.lat, doc.long);
+                        doc.save();
+                    });
+
+
+                }
+            });
+
+            Item.find({}).sort({"distance":"asc"}).exec(function (err,docs) {
+                res.render("menu",{items:docs,menuname:menuname,login:login,dis:dis})
             });
         }
 });
@@ -851,7 +903,7 @@ app.post("/sell",function (req,res) {
         newname="mains";
     else if(req.body.category==="Deserts")
         newname="deserts";
-    Item.create({name:req.body.name,discription:req.body.disc,price:req.body.price,category:"food",subcategory:newname,by:req.user.name,sold:"0",veg:true});
+    Item.create({name:req.body.name,discription:req.body.disc,price:req.body.price,category:"food",subcategory:newname,by:req.user.name,sold:"0",veg:true,lat:req.user.lat,long:req.user.long,distance:"0"});
     User.findOneAndUpdate({username:req.user.username},{$push: { selling: req.body.name }}, function (err,doc) {
         if(err)
             console.log(err);

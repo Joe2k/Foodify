@@ -53,6 +53,9 @@
                 <a class="dropdown-item " href="/menu/<%=menuname%>/asc">Price: low to high</a>
                 <a class="dropdown-item" href="/menu/<%=menuname%>/dsc">Price: high to low</a>
                 <a class="dropdown-item" href="/menu/<%=menuname%>/pop">Popularity</a>
+                <%if(login==="yes"){%>
+                <a class="dropdown-item" href="/menu/<%=menuname%>/dis">Distance</a>
+                <%}%>
             </div>
         </div>
     </div>
@@ -62,6 +65,19 @@
     <div class="bg-circle-3 bg-circle"></div>
 
 </header>
+<%if(dis==="yes"){%>
+<div class="dropdown container text-center" style="padding-top: 20px; ">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter distances
+        <span class="caret"></span></button>
+    <ul class="dropdown-menu text-center">
+        <li><a href="#" id="km5">Within 5km</a></li>
+        <li><a href="#" id="km7">Within 7km</a></li>
+        <li><a href="#" id="km10">Within 10km</a></li>
+    </ul>
+</div>
+    <%}%>
+<br>
+<br>
 
 <section>
     <div class="container">
@@ -69,11 +85,14 @@
             <% for(var i=0;i<items.length;i++){%>
 
             <%if(items[i].subcategory===menuname){%>
-            <div class="col-lg-4 ">
+            <div id="item" class="col-lg-4 ">
                 <div class="p-5"><img class="img-fluid border rounded-circle border-primary shadow-lg" src="<%=items[i].img%>" style="box-shadow: 0px 0px;">
                     <h2 style="text-align: center;padding: 20px 10px 0px;margin: 0px 0px 0px;"><%=items[i].name%></h2>
                     <p style="text-align: center;"><%=items[i].discription%></p>
                     <h4 style="text-align: center;">Sold By <%=items[i].by%></h4>
+                    <%if(login==="yes"){%>
+                    <p  style="text-align: center;">Distance: <span id="distance"><%=Math.round(items[i].distance)%></span> km</p>
+                    <%}%>
                     <h5 style="text-align: center;">Price: Rs. <%=items[i].price%></h5>
                     <form class="text-center">
                         <button name="button" value="<%=items[i].price%>" class="btn btn-primary plus-btn" type="button" style="border-radius: 20px;"><i class="fa fa-plus"></i></button>
@@ -238,6 +257,43 @@
             }
         }
     });
+    $("#km5").click(function (){
+
+        $("div#item").each(function (index){
+            $(this).show();
+        });
+        $("span#distance").each(function (index){
+            //console.log( index + ": " + $( this ).text() );
+            if($( this ).text()>5){
+            $(this).closest("#item").hide();
+        }
+        });
+    });
+
+    $("#km7").click(function (){
+        $("div#item").each(function (index){
+            $(this).show();
+        });
+        $("span#distance").each(function (index){
+            //console.log( index + ": " + $( this ).text() );
+            if($( this ).text()>7){
+                $(this).closest("#item").hide();
+            }
+        });
+    });
+
+    $("#km10").click(function (){
+        $("div#item").each(function (index){
+            $(this).show();
+        });
+        $("span#distance").each(function (index){
+            //console.log( index + ": " + $( this ).text() );
+            if($( this ).text()>10){
+                $(this).closest("#item").hide();
+            }
+        });
+    });
+
 </script>
 </body>
 </html>
