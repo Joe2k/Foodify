@@ -3,13 +3,30 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no,maximum-scale=1,user-scalable=no">
     <title>My Account</title>
     <link rel="stylesheet" href="/home_assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
     <link rel="stylesheet" href="/home_assets/home_css/untitled.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <style>
+        .map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -71,15 +88,27 @@
                     <th class="text-center">Qty</th>
                 </tr>
                 </thead>
-                <tbody>
-
+                <tbody style="position: relative;>
+                    <%var j=0;%>
+                        <%var k=0;%>
                     <%for(var i=0;i<docs.orders.length;i++){%>
                     <%for(const property in docs.orders[i]){%>
                     <%if(property!="total"){%>
-                    <tr>
+                    <tr style="position: relative;">
                     <td class="text-center"><%=property%></td>
                     <td class="text-center"><%=docs.orders[i][property]%></td>
                     </tr>
+                    <input value="<%=docs.orderLocations[j]%>" hidden>
+                    <%j++;%>
+                    <input value="<%=docs.orderLocations[j]%>" hidden>
+                    <%j++;%>
+                <tr>
+                    <td>
+                    <div style="position: relative; width: 300px;height:300px;" class="container"><div class="map" id='map<%=k%>'></div>
+                        <%k++;%>
+                    </div>
+                    </td>
+                </tr>
                     <%}%>
                     <%}%>
                     <%}%>
@@ -88,6 +117,8 @@
             </table>
         </div>
     </div>
+
+
     <div class="text-center" style="padding-bottom: 30px;">
     <a href="/home" class="text-center" style="margin-right: auto; margin-left: auto;box-sizing: content-box;">
     <button class="btn btn-primary " type="button"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -115,6 +146,117 @@
             $(this).collapse('hide');
         }
     });
+    for(var i=0;i<2;i++){
+
+        console.log("hi");
+        mapboxgl.accessToken = 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmanA4bXM2MGtoYTJ0bjRpZ2UxYjl2bCJ9.ntM43CJhueGaDhqGQY4J3g';
+        var map = new mapboxgl.Map({
+            container: "map"+i,
+            style: 'mapbox://styles/mapbox/streets-v10',
+            center: [-122.662323, 45.523751], // starting position
+            zoom: 12
+        });
+        // set the bounds of the map
+        var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
+        map.setMaxBounds(bounds);
+
+        // initialize the map canvas to interact with later
+        var canvas = map.getCanvasContainer();
+
+        // an arbitrary start will always be the same
+        // only the end or destination will change
+        var start = [-122.662323, 45.523751];
+
+        // create a function to make a directions request
+        function getRoute(end) {
+            // make a directions request using cycling profile
+            // an arbitrary start will always be the same
+            // only the end or destination will change
+            var start = [-122.662323, 45.523751];
+            var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+
+            // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+            var req = new XMLHttpRequest();
+            req.open('GET', url, true);
+            req.onload = function () {
+                var json = JSON.parse(req.response);
+                var data = json.routes[0];
+                var route = data.geometry.coordinates;
+                var geojson = {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: route
+                    }
+                };
+                // if the route already exists on the map, reset it using setData
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(geojson);
+                } else { // otherwise, make a new request
+                    map.addLayer({
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'LineString',
+                                    coordinates: geojson
+                                }
+                            }
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#3887be',
+                            'line-width': 5,
+                            'line-opacity': 0.75
+                        }
+                    });
+                }
+                // add turn instructions here at the end
+            };
+            req.send();
+        }
+
+        map.on('load', function () {
+            // make an initial directions request that
+            // starts and ends at the same location
+            getRoute(start);
+
+            // Add starting point to the map
+            map.addLayer({
+                id: 'point',
+                type: 'circle',
+                source: {
+                    type: 'geojson',
+                    data: {
+                        type: 'FeatureCollection',
+                        features: [{
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Point',
+                                coordinates: start
+                            }
+                        }
+                        ]
+                    }
+                },
+                paint: {
+                    'circle-radius': 10,
+                    'circle-color': '#3887be'
+                }
+            });
+            // this is where the code from the next step will go
+        });
+    }
+
 </script>
 </body>
 </html>

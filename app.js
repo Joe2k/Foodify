@@ -62,7 +62,8 @@ const userSchema = new mongoose.Schema({
     selling: Array,
     emailVerify: Boolean,
     emailToken: String,
-    phoneVerify: Boolean
+    phoneVerify: Boolean,
+    orderLocations: Array
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -292,7 +293,7 @@ app.get("/failure",function (req,res) {
 app.get("/account",function (req,res) {
     if(req.isAuthenticated()){
         User.find({username:req.user.username},function (err,docs) {
-            res.render("account",{docs:docs[0],newname:req.user.name});
+            res.render("account",{docs:docs[0],newname:req.user.name,userLat:req.user.lat,userLong:req.user.long});
             //console.log(docs[0]);
         });
     }
@@ -706,6 +707,10 @@ app.get("/verify/:checkname",async (req,res,next) => {
     // res.render("mail");
 });
 
+app.get("/test",function (req,res){
+    res.render("test");
+});
+
 app.post("/phone",function (req,res){
 
     User.find({username:req.user.username},function (err,docs1) {
@@ -868,12 +873,24 @@ app.post("/cart",function (req,res) {
 
         if(err)
             res.redirect("/failure");
-
-        else {
-            forSuc="buy";
-            res.redirect("/success");
-        }
     });
+    for(const property in req.body){
+        if(property!="total"){
+            Item.find({name:property},function (err,docs){
+                //console.log(docs);
+                User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: docs[0].lat }}, function (err,doc) {
+                    if(err)
+                        console.log(err);
+                });
+                User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: docs[0].long }}, function (err,doc) {
+                    if(err)
+                        console.log(err);
+                });
+            });
+        }
+    }
+    forSuc="buy";
+    res.redirect("/success");
 });
 
 app.post('/image', upload.single('photo'), (req, res) => {
