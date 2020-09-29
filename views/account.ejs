@@ -157,6 +157,7 @@
     let itemNames=[];
     let userName=$("#username")[0].value;
     let ite=$("#num")[0].value;
+    let routes=[];
     //console.log(userName,ite);
     for(var i=0;i<$("#num")[0].value;i++){
         map[i] = L.map('map'+i);
@@ -176,7 +177,7 @@
             accessToken: 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmanA4bXM2MGtoYTJ0bjRpZ2UxYjl2bCJ9.ntM43CJhueGaDhqGQY4J3g'
         }).addTo(map[i]);
 
-        L.Routing.control({
+        routes[i]=L.Routing.control({
             waypoints: [
                 L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
                 L.latLng($("#lat"+i)[0].value, $("#long"+i)[0].value)
@@ -229,7 +230,8 @@
             if(data.active===true && data.delivered===false)
             {
                 console.log("hi");
-                L.Routing.control({
+                routes[i].spliceWaypoints(0,2);
+                routes[i]=L.Routing.control({
                     waypoints: [
                         L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
                         L.latLng(data.delLat, data.delLong)
