@@ -35,6 +35,7 @@ client.verify.services.create({friendlyName: 'Food App'})
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(express.json({limit:'1mb'}));
 
 app.use(session({
     secret: process.env.PASS_SECRET,
@@ -83,6 +84,12 @@ const Item =mongoose.model("Item",{
     long: Number,
     distance: Number
 });
+const Order= mongoose.model("Order",{
+   name:String,
+   userName: String,
+   active: Boolean,
+   delivered: Boolean
+});
 
 passport.use(User.createStrategy());
 
@@ -97,6 +104,8 @@ var forReset="";
 var forLogin="";
 var forLogout="no";
 var userTransfer="";
+var deliveryLat=0.0;
+var deliveryLong=0.0;
 
 function haversine_distance(lat1, long1, lat2,long2) {
     var R = 6371.0710; // Radius of the Earth in miles
@@ -293,7 +302,7 @@ app.get("/failure",function (req,res) {
 app.get("/account",function (req,res) {
     if(req.isAuthenticated()){
         User.find({username:req.user.username},function (err,docs) {
-            res.render("account",{docs:docs[0],newname:req.user.name,userLat:req.user.lat,userLong:req.user.long});
+            res.render("account",{docs:docs[0],newname:req.user.name,userLat:req.user.lat,userLong:req.user.long,userName:req.user.username});
             //console.log(docs[0]);
         });
     }
@@ -707,8 +716,55 @@ app.get("/verify/:checkname",async (req,res,next) => {
     // res.render("mail");
 });
 
-app.get("/test",function (req,res){
-    res.render("test");
+app.get("/delivery",function (req,res){
+    Order.find({},function (err,docs){
+        res.render("delivery",{docs:docs});
+    });
+
+});
+
+app.post("/deliver",function (req,res){
+    //console.log(req.body.itemName);
+    //console.log(req.body.userName);
+   Order.findOneAndUpdate({name:req.body.itemName,userName:req.body.userName},{active:true},function (err,docs){
+       if(err)
+        console.log(err);
+       //console.log(docs);
+   });
+   res.redirect("/delivery");
+});
+
+app.post("/delivered",function (req,res){
+    Order.findOneAndUpdate({name:req.body.itemName,userName:req.body.userName},{delivered:true},function (err,docs){
+        if(err)
+            console.log(err);
+    });
+    res.redirect("/delivery");
+});
+
+app.post("/getdeliveryApi",function (req,res){
+    console.log(req.body);
+    Order.find({name:req.body.itemName, userName: req.body.userName},function (err,docs){
+        if(err)
+            console.log(err);
+        res.json({
+            active:docs[0].active,
+            delivered:docs[0].delivered,
+            delLat:deliveryLat,
+            delLong:deliveryLong
+        });
+    });
+
+});
+
+app.post("/deliveryApi",function (req,res){
+    //console.log(req.body);
+    deliveryLat=req.body.lat;
+    deliveryLong=req.body.long;
+    //console.log(deliveryLat,deliveryLong);
+    res.json({
+       status:"success"
+    });
 });
 
 app.post("/phone",function (req,res){
@@ -874,17 +930,24 @@ app.post("/cart",function (req,res) {
         if(err)
             res.redirect("/failure");
     });
+
     for(const property in req.body){
         if(property!="total"){
             Item.find({name:property},function (err,docs){
                 //console.log(docs);
-                User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: docs[0].lat }}, function (err,doc) {
+                User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: [docs[0].lat,docs[0].long] }}, function (err,doc) {
                     if(err)
                         console.log(err);
                 });
-                User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: docs[0].long }}, function (err,doc) {
-                    if(err)
-                        console.log(err);
+                // User.findOneAndUpdate({username:req.user.username},{$push: { orderLocations: docs[0].long }}, function (err,doc) {
+                //     if(err)
+                //         console.log(err);
+                // });
+                Order.create({
+                    name:property,
+                    userName: req.user.username,
+                    active: false,
+                    delivered: false
                 });
             });
         }
