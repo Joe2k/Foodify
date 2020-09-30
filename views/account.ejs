@@ -148,6 +148,7 @@
     });
     $(document).ready(function (){
         $(".leaflet-routing-container").hide();
+
     });
 
 
@@ -206,9 +207,9 @@
         L.marker([$("#lat"+i)[0].value, $("#long"+i)[0].value],{icon: shopIcon}).addTo(map[i]);
     }
 
-    async function getTheLocation(map){
+  async function getTheLocation(map){
         for(var i=0;i<ite;i++) {
-
+            console.log("hi");
             // fetch("/deliveryApi").then(response => {
             //     console.log(response.json());
             // });
@@ -216,254 +217,89 @@
                 itemName:itemNames[i],
                 userName:userName
             }
-            const options={
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify(details)
-            }
-            const response = await fetch("/getdeliveryApi",options);
-            const data = await response.json();
-            console.log(data);
-            if(data.active===true && data.delivered===false)
-            {
-                console.log("hi");
-                routes[i].spliceWaypoints(0,2);
-                routes[i]=L.Routing.control({
-                    waypoints: [
-                        L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
-                        L.latLng(data.delLat, data.delLong)
-                    ],
-                    createMarker: function() { return null; },
-                    routeWhileDragging: true,
-                    lineOptions: {styles:[{color: 'black', opacity: 0.15, weight: 10}, {color: 'white', opacity: 0.8, weight: 9}, {color: 'red', opacity: 1, weight: 5}]}
-                }).addTo(map[i]);
 
-                var foodIcon = L.icon({
-                    iconUrl: '/food-delivery.png',
-                    iconSize: [28, 40],
+                const options = {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify(details)
+                }
+                console.log("hi2");
+                const response = await fetch("/getdeliveryApi", options);
+                const data = await response.json();
+                console.log(data);
+                if(data.active===true && data.delivered===false)
+                {
+                    //console.log("hi");
+                    routes[i].spliceWaypoints(0,2);
+                    routes[i]=L.Routing.control({
+                        waypoints: [
+                            L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
+                            L.latLng(data.delLat, data.delLong)
+                        ],
+                        createMarker: function() { return null; },
+                        routeWhileDragging: true,
+                        lineOptions: {styles:[{color: 'black', opacity: 0.15, weight: 10}, {color: 'white', opacity: 0.8, weight: 9}, {color: 'red', opacity: 1, weight: 5}]}
+                    }).addTo(map[i]);
 
-                    popupAnchor: [-3, -76]
-                });
+                    var foodIcon = L.icon({
+                        iconUrl: '/food-delivery.png',
+                        iconSize: [28, 40],
 
-                L.marker([data.delLat, data.delLong],{icon: foodIcon}).addTo(map[i]);
-                $(".leaflet-routing-container").hide();
-            }
+                        popupAnchor: [-3, -76]
+                    });
+
+                    L.marker([data.delLat, data.delLong],{icon: foodIcon}).addTo(map[i]);
+                    $(".leaflet-routing-container").hide();
+                }
+
+
+
+
+
+
+
+
+
         }
+
     }
 
-    getTheLocation(map,lats,longs);
+    const asyncIntervals = [];
 
+    const runAsyncInterval = async (cb, interval, intervalIndex) => {
+        await cb();
+        if (asyncIntervals[intervalIndex]) {
+            setTimeout(() => runAsyncInterval(cb, interval, intervalIndex), interval);
+        }
+    };
 
+    const setAsyncInterval = (cb, interval) => {
+        if (cb && typeof cb === "function") {
+            const intervalIndex = asyncIntervals.length;
+            asyncIntervals.push(true);
+            runAsyncInterval(cb, interval, intervalIndex);
+            return intervalIndex;
+        } else {
+            throw new Error('Callback must be a function');
+        }
+    };
 
-
-    //     // console.log($("#userLat")[0].value);
-    // var maps=[];
-    // mapboxgl.accessToken = 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmanA4bXM2MGtoYTJ0bjRpZ2UxYjl2bCJ9.ntM43CJhueGaDhqGQY4J3g';
-    // for(var i=0;i<2;i++){
-    //     maps[i] = new mapboxgl.Map({
-    //         container: "map"+i,
-    //         style: 'mapbox://styles/mapbox/streets-v10',
-    //         center: [$("#userLong")[0].value, $("#userLat")[0].value], // starting position
-    //         zoom: 12
-    //     });
-    // }
-    // //     var map0 = new mapboxgl.Map({
-    // //         container: "map0",
-    // //         style: 'mapbox://styles/mapbox/streets-v10',
-    // //         center: [$("#userLong")[0].value, $("#userLat")[0].value], // starting position
-    // //         zoom: 12
-    // //     });
-    // // var map1 = new mapboxgl.Map({
-    // //     container: "map1",
-    // //     style: 'mapbox://styles/mapbox/streets-v10',
-    // //     center: [$("#userLong")[0].value, $("#userLat")[0].value], // starting position
-    // //     zoom: 12
-    // // });
-    //     // set the bounds of the map
-    //     //var bounds = [[$("#userLong")[0].value-0.2, $("#userLat")[0].value-0.2], [$("#userLong")[0].value+0.2, $("#userLat")[0].value+0.2]];
-    //     //map.setMaxBounds(bounds);
-    //
-    //     // initialize the map canvas to interact with later
-    //     //var canvas = map0.getCanvasContainer();
-    //
-    //     // an arbitrary start will always be the same
-    //     // only the end or destination will change
-    // var start = [$("#userLong")[0].value, $("#userLat")[0].value];
-    //
-    //         //var newi=i;
-    //     //console.log(newi);
-    // for(var i=0;i<2;i++){
-    //     maps[i].on('load', function (newi) {
-    //         console.log(newi.target._container.id);
-    //         // make an initial directions request that
-    //         // starts and ends at the same location
-    //         //
-    //         //getRoute(start);
-    //         // Add starting point to the map
-    //         for(var j=0;j<2;j++){
-    //             mapboxgl.accessToken = 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmanA4bXM2MGtoYTJ0bjRpZ2UxYjl2bCJ9.ntM43CJhueGaDhqGQY4J3g';
-    //                 // make a directions request using cycling profile
-    //                 // an arbitrary start will always be the same
-    //                 // only the end or destination will change
-    //                 var start = [$("#userLong")[0].value, $("#userLat")[0].value];
-    //                 var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';' + start[0] + ',' + start[1] + '?steps=true&geometries=geojson&access_token=' + 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmanA4bXM2MGtoYTJ0bjRpZ2UxYjl2bCJ9.ntM43CJhueGaDhqGQY4J3g';
-    //             console.log(url);
-    //                 // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-    //                 var req = new XMLHttpRequest();
-    //                 req.open('GET', url, true);
-    //                 req.onload = function () {
-    //
-    //                     var json = JSON.parse(req.response);
-    //                     var data = json.routes[0];
-    //                     var route = data.geometry.coordinates;
-    //                     var geojson = {
-    //                         type: 'Feature',
-    //                         properties: {},
-    //                         geometry: {
-    //                             type: 'LineString',
-    //                             coordinates: route
-    //                         }
-    //                     };
-    //                     // if the route already exists on the map, reset it using setData
-    //                      // otherwise, make a new request
-    //                         maps[0].addLayer({
-    //                             id: 'route',
-    //                             type: 'line',
-    //                             source: {
-    //                                 type: 'geojson',
-    //                                 data: {
-    //                                     type: 'Feature',
-    //                                     properties: {},
-    //                                     geometry: {
-    //                                         type: 'LineString',
-    //                                         coordinates: geojson
-    //                                     }
-    //                                 }
-    //                             },
-    //                             layout: {
-    //                                 'line-join': 'round',
-    //                                 'line-cap': 'round'
-    //                             },
-    //                             paint: {
-    //                                 'line-color': '#3887be',
-    //                                 'line-width': 5,
-    //                                 'line-opacity': 0.75
-    //                             }
-    //                         });
-    //
-    //                     // add turn instructions here at the end
-    //                 };
-    //                 req.send();
-    //
-    //
-    //             maps[j].addLayer({
-    //                 id: 'point'+newi.target._container.id,
-    //                 type: 'circle',
-    //                 source: {
-    //                     type: 'geojson',
-    //                     data: {
-    //                         type: 'FeatureCollection',
-    //                         features: [{
-    //                             type: 'Feature',
-    //                             properties: {},
-    //                             geometry: {
-    //                                 type: 'Point',
-    //                                 coordinates: start
-    //                             }
-    //                         }
-    //                         ]
-    //                     }
-    //                 },
-    //                 paint: {
-    //                     'circle-radius': 10,
-    //                     'circle-color': '#3887be'
-    //                 }
-    //             });
-    //             maps[j].addLayer({
-    //                 id: 'end'+newi.target._container.id,
-    //                 type: 'circle',
-    //                 source: {
-    //                     type: 'geojson',
-    //                     data: {
-    //                         type: 'FeatureCollection',
-    //                         features: [{
-    //                             type: 'Feature',
-    //                             properties: {},
-    //                             geometry: {
-    //                                 type: 'Point',
-    //                                 coordinates: [$("#long0")[0].value, $("#lat0")[0].value]
-    //                             }
-    //                         }]
-    //                     }
-    //                 },
-    //                 paint: {
-    //                     'circle-radius': 10,
-    //                     'circle-color': '#f30'
-    //                 }
-    //             });
-    //
-    //
-    //             //getRoute([$("#long0")[0].value, $("#lat0")[0].value]);
-    //
-    //             var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';' + $("#long0")[0].value + ',' + $("#lat0")[0].value + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-    //
-    //             // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-    //             var req = new XMLHttpRequest();
-    //             req.open('GET', url, true);
-    //             req.onload = function () {
-    //                 var json = JSON.parse(req.response);
-    //                 var data = json.routes[0];
-    //                 var route = data.geometry.coordinates;
-    //                 var geojson = {
-    //                     type: 'Feature',
-    //                     properties: {},
-    //                     geometry: {
-    //                         type: 'LineString',
-    //                         coordinates: route
-    //                     }
-    //                 };
-    //                 // if the route already exists on the map, reset it using setData
-    //                 // otherwise, make a new request
-    //                 maps[0].addLayer({
-    //                     id: 'route',
-    //                     type: 'line',
-    //                     source: {
-    //                         type: 'geojson',
-    //                         data: {
-    //                             type: 'Feature',
-    //                             properties: {},
-    //                             geometry: {
-    //                                 type: 'LineString',
-    //                                 coordinates: geojson
-    //                             }
-    //                         }
-    //                     },
-    //                     layout: {
-    //                         'line-join': 'round',
-    //                         'line-cap': 'round'
-    //                     },
-    //                     paint: {
-    //                         'line-color': '#3887be',
-    //                         'line-width': 5,
-    //                         'line-opacity': 0.75
-    //                     }
-    //                 });
-    //
-    //                 // add turn instructions here at the end
-    //             };
-    //             req.send();
-    //
-    //         }
-    //
-    //         // this is where the code from the next step will go
-    //         //getRoute([$("#long0")[0].value, $("#lat0")[0].value]);
-    //     });
-    // }
-    //
-
+    const clearAsyncInterval = (intervalIndex) => {
+        if (asyncIntervals[intervalIndex]) {
+            asyncIntervals[intervalIndex] = false;
+        }
+    };
+    // for(var j=0;j<10;j++)
+    //     getTheLocation(map);
+    //     setAsyncInterval(getTheLocation(map),1000);
+    //getTheLocation(map,lats,longs);
+    getTheLocation(map);
+    setInterval(()=>{
+        getTheLocation(map);
+    },10000);
 
 
 

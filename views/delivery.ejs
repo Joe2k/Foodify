@@ -84,8 +84,8 @@
     });
 
     var getLocation=function (){
-
-       navigator.geolocation.getCurrentPosition(position => {
+        console.log("hi");
+        navigator.geolocation.getCurrentPosition(position => {
            const lat=position.coords.latitude;
            const long=position.coords.longitude;
            console.log(lat,long);
@@ -102,8 +102,10 @@
        });
     }
 
-
-    setInterval(getLocation,5000);
+    getLocation();
+    setInterval(() =>{
+        getLocation();
+    },2000);
 
 
 </script>

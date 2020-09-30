@@ -744,6 +744,7 @@ app.post("/delivered",function (req,res){
 
 app.post("/getdeliveryApi",function (req,res){
     console.log(req.body);
+    console.log(deliveryLat,deliveryLong);
     Order.find({name:req.body.itemName, userName: req.body.userName},function (err,docs){
         if(err)
             console.log(err);
@@ -761,7 +762,7 @@ app.post("/deliveryApi",function (req,res){
     //console.log(req.body);
     deliveryLat=req.body.lat;
     deliveryLong=req.body.long;
-    //console.log(deliveryLat,deliveryLong);
+    console.log(deliveryLat,deliveryLong);
     res.json({
        status:"success"
     });
