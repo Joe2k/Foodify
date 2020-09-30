@@ -209,7 +209,7 @@
 
   async function getTheLocation(map){
         for(var i=0;i<ite;i++) {
-            console.log("hi");
+            //console.log("hi");
             // fetch("/deliveryApi").then(response => {
             //     console.log(response.json());
             // });
@@ -226,10 +226,10 @@
                     },
                     body: JSON.stringify(details)
                 }
-                console.log("hi2");
+                //console.log("hi2");
                 const response = await fetch("/getdeliveryApi", options);
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 if(data.active===true && data.delivered===false)
                 {
                     //console.log("hi");

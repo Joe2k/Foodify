@@ -84,11 +84,11 @@
     });
 
     var getLocation=function (){
-        console.log("hi");
+        //console.log("hi");
         navigator.geolocation.getCurrentPosition(position => {
            const lat=position.coords.latitude;
            const long=position.coords.longitude;
-           console.log(lat,long);
+           //console.log(lat,long);
            const data={lat,long};
            const options ={
                method:"POST",
