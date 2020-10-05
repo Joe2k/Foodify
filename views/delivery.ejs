@@ -43,8 +43,7 @@
             <%for(var i=0;i<docs.length;i++){%>
                     <tr style="position: relative;">
             <td class="text-center"><%=docs[i].name%></td>
-            <input name="userLat<%=i%>" value="<%=userLat[i]%>" hidden>
-            <input name="userLong<%=i%>" value="<%=userLong[i]%>" hidden>
+
             <%if(docs[i].active===false){%>
             <form method="post" action="/deliver">
                 <input name="itemName" value="<%=docs[i].name%>" hidden>
