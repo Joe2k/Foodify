@@ -14,7 +14,7 @@
 
 <body>
 <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom" style="color: rgb(194,74,74);background-color: rgb(255,255,255);">
-    <div class="container"><a class="navbar-brand" href="/home">FOoD</a>
+    <div class="container"><a class="navbar-brand" href="/home"><img src="/foodify-logo.png" style="height: 40px; width:40px;"></a>
 
     </div>
 </nav>
@@ -43,6 +43,8 @@
             <%for(var i=0;i<docs.length;i++){%>
                     <tr style="position: relative;">
             <td class="text-center"><%=docs[i].name%></td>
+            <input name="userLat<%=i%>" value="<%=userLat[i]%>" hidden>
+            <input name="userLong<%=i%>" value="<%=userLong[i]%>" hidden>
             <%if(docs[i].active===false){%>
             <form method="post" action="/deliver">
                 <input name="itemName" value="<%=docs[i].name%>" hidden>

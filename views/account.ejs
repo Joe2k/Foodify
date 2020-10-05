@@ -28,7 +28,7 @@
 
 <body>
 <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom" style="color: rgb(194,74,74);background-color: rgb(255,255,255);">
-    <div class="container"><a class="navbar-brand" href="/home">FOoD</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+    <div class="container"><a class="navbar-brand" href="/home"><img src="/foodify-logo.png" style="height: 40px; width:40px;"></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive" style="color: rgb(242,0,0);">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item" role="presentation"><a class="nav-link" href="/sell">Sell</a></li>
@@ -103,8 +103,12 @@
                 <tr>
                     <td>
                     <div style="position: relative; width: 90%;height:250px;" class="container"><div class="map" id='map<%=k%>'></div>
-                        <%k++;%>
+
                     </div>
+                    </td>
+                    <td class="text-center" id="deliveryActive<%=k%>">
+
+                        <%k++;%>
                     </td>
                 </tr>
                     <%}%>
@@ -148,7 +152,7 @@
     });
     $(document).ready(function (){
         $(".leaflet-routing-container").hide();
-
+        ;
     });
 
 
@@ -233,16 +237,16 @@
                 if(data.active===true && data.delivered===false)
                 {
                     //console.log("hi");
-                    routes[i].spliceWaypoints(0,2);
-                    routes[i]=L.Routing.control({
-                        waypoints: [
-                            L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
-                            L.latLng(data.delLat, data.delLong)
-                        ],
-                        createMarker: function() { return null; },
-                        routeWhileDragging: true,
-                        lineOptions: {styles:[{color: 'black', opacity: 0.15, weight: 10}, {color: 'white', opacity: 0.8, weight: 9}, {color: 'red', opacity: 1, weight: 5}]}
-                    }).addTo(map[i]);
+                    routes[i].spliceWaypoints(1,2,L.latLng(data.delLat, data.delLong));
+                    // routes[i]=L.Routing.control({
+                    //     waypoints: [
+                    //         L.latLng($("#userLat")[0].value, $("#userLong")[0].value),
+                    //         L.latLng(data.delLat, data.delLong)
+                    //     ],
+                    //     createMarker: function() { return null; },
+                    //     routeWhileDragging: true,
+                    //     lineOptions: {styles:[{color: 'black', opacity: 0.15, weight: 10}, {color: 'white', opacity: 0.8, weight: 9}, {color: 'red', opacity: 1, weight: 5}]}
+                    // }).addTo(map[i]);
 
                     var foodIcon = L.icon({
                         iconUrl: '/food-delivery.png',
@@ -253,9 +257,35 @@
 
                     L.marker([data.delLat, data.delLong],{icon: foodIcon}).addTo(map[i]);
                     $(".leaflet-routing-container").hide();
+
+                    $("#deliveryActive"+i)[0].innerHTML="<img src=\"/delivery-man.png\" style=\"width: 2em; height: 3em;\">";
+
+                    //$("#deliveryActive").show();
                 }
 
+                else if(data.active===true && data.delivered===true){
+                    $("#deliveryActive"+i)[0].innerHTML="<img src=\"/check.png\" style=\"width: 2em; height: 2em;\">";
+                    routes[i].spliceWaypoints(1,2,L.latLng($("#lat"+i)[0].value, $("#long"+i)[0].value));
+                    var homeIcon = L.icon({
+                        iconUrl: '/home.png',
+                        iconSize: [28, 40],
 
+                        popupAnchor: [-3, -76]
+                    });
+                    var shopIcon = L.icon({
+                        iconUrl: '/cooking.png',
+                        iconSize: [28, 40],
+
+                        popupAnchor: [-3, -76]
+                    });
+
+                    L.marker([$("#userLat")[0].value, $("#userLong")[0].value],{icon: homeIcon}).addTo(map[i]);
+                    L.marker([$("#lat"+i)[0].value, $("#long"+i)[0].value],{icon: shopIcon}).addTo(map[i]);
+                }
+
+                else{
+                    $("#deliveryActive"+i)[0].innerHTML="<img src=\"/cooking-pot.png\" style=\"width: 2em; height: 2em;\">";
+                }
 
 
 

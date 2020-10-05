@@ -14,7 +14,7 @@
 
 <body>
 <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom" style="color: rgb(194,74,74);background-color: rgb(255,255,255);">
-    <div class="container"><a class="navbar-brand" href="/home">FOoD</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+    <div class="container"><a class="navbar-brand" href="/home"><img src="/foodify-logo.png" style="height: 40px; width:40px;"></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive" style="color: rgb(242,0,0);">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item" role="presentation"><a class="nav-link" href="#sell">Sell</a></li>
@@ -33,12 +33,12 @@
 <header class="masthead text-center text-white">
     <div class="masthead-content">
         <div class="container">
-            <h1 class="masthead-heading mb-0">Food.</h1>
+            <img src="/foodify-logo.png" style="width:60%; max-width: 200px;">
             <%if(newname!=""){%>
-            <h2 class="masthead-subheading mb-0">Hi <%=newname%></h2>
+            <h2 class="masthead-subheading mb-0" style="padding-top: 40px;">Hi <%=newname%>!</h2>
             <%}%>
             <%if(newname==""){%>
-            <a href="/login"><button class="btn btn-light" style="color: #ee0979; font-weight: 600!important; font-family: Catamaran;">Login</button> </a>
+            <a href="/login" style="display: block; padding-top: 20px;"><button class="btn btn-light" style=" color: #ee0979; font-weight: 600!important; font-family: Catamaran;">Login</button> </a>
             <%}%>
         </div>
     </div>
