@@ -338,9 +338,8 @@ app.get("/verify/:checkname",async (req,res,next) => {
             await req.login(user,async (err) => {
                 if(err) return next(err);
 
-                const redirectUrl= req.session.redirectTo || "/";
-                delete req.session.redirectTo;
-                res.redirect(redirectUrl);
+
+                res.render("mail");
             });
         }
     } catch(error){
@@ -534,28 +533,314 @@ app.post("/register",async function (req,res) {
                 const msg = {
                     to: req.body.username,
                     from: 'jonathansamuel2k@gmail.com', // Use the email address or domain you verified above
-                    subject: 'Sending with Twilio SendGrid is Fun',
-                    text: 'and easy to do anywhere, even with Node.js',
-                    html: "<!DOCTYPE html>\n" +
-                        "<html lang=\"en\" >\n" +
-                        "<head>\n" +
-                        "  <meta charset=\"UTF-8\">\n" +
-                        "  <title>Confirmation E-Mail</title>\n" +
-                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>\n" +
-                        "\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "<!-- partial:index.partial.html -->\n" +
-                        "<div class=\"container\" style=\"padding-top:50px;\">\n" +
-                        "  <img src=\"/foodify-logo.png\" style=\"width:60%; max-width: 200px;\">\n" +
-                        "  <h3>Thanks for registering to our service!</h3>\n" +
-                        "  <p>Please click the link below to verify your e-mail.</p>\n" +
-                        "  <a href="+link+"><button class=\"btn btn-outline-primary\">Verify my E-Mail</button></a>\n" +
-                        "</div>\n" +
-                        "<!-- partial -->\n" +
-                        "  <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js'></script>\n" +
-                        "</body>\n" +
-                        "</html>\n"
+                    subject: 'Confirmation E-Mail for Foodify',
+                    text: 'Confirm your E-Mail!',
+                    html: "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html data-editor-version=\"2\" class=\"sg-campaigns\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>\n" +
+                        "      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                        "      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1\">\n" +
+                        "      <!--[if !mso]><!-->\n" +
+                        "      <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\">\n" +
+                        "      <!--<![endif]-->\n" +
+                        "      <!--[if (gte mso 9)|(IE)]>\n" +
+                        "      <xml>\n" +
+                        "        <o:OfficeDocumentSettings>\n" +
+                        "          <o:AllowPNG/>\n" +
+                        "          <o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                        "        </o:OfficeDocumentSettings>\n" +
+                        "      </xml>\n" +
+                        "      <![endif]-->\n" +
+                        "      <!--[if (gte mso 9)|(IE)]>\n" +
+                        "  <style type=\"text/css\">\n" +
+                        "    body {width: 600px;margin: 0 auto;}\n" +
+                        "    table {border-collapse: collapse;}\n" +
+                        "    table, td {mso-table-lspace: 0pt;mso-table-rspace: 0pt;}\n" +
+                        "    img {-ms-interpolation-mode: bicubic;}\n" +
+                        "  </style>\n" +
+                        "<![endif]-->\n" +
+                        "      <style type=\"text/css\">\n" +
+                        "    body, p, div {\n" +
+                        "      font-family: inherit;\n" +
+                        "      font-size: 14px;\n" +
+                        "    }\n" +
+                        "    body {\n" +
+                        "      color: #000000;\n" +
+                        "    }\n" +
+                        "    body a {\n" +
+                        "      color: #000000;\n" +
+                        "      text-decoration: none;\n" +
+                        "    }\n" +
+                        "    p { margin: 0; padding: 0; }\n" +
+                        "    table.wrapper {\n" +
+                        "      width:100% !important;\n" +
+                        "      table-layout: fixed;\n" +
+                        "      -webkit-font-smoothing: antialiased;\n" +
+                        "      -webkit-text-size-adjust: 100%;\n" +
+                        "      -moz-text-size-adjust: 100%;\n" +
+                        "      -ms-text-size-adjust: 100%;\n" +
+                        "    }\n" +
+                        "    img.max-width {\n" +
+                        "      max-width: 100% !important;\n" +
+                        "    }\n" +
+                        "    .column.of-2 {\n" +
+                        "      width: 50%;\n" +
+                        "    }\n" +
+                        "    .column.of-3 {\n" +
+                        "      width: 33.333%;\n" +
+                        "    }\n" +
+                        "    .column.of-4 {\n" +
+                        "      width: 25%;\n" +
+                        "    }\n" +
+                        "    @media screen and (max-width:480px) {\n" +
+                        "      .preheader .rightColumnContent,\n" +
+                        "      .footer .rightColumnContent {\n" +
+                        "        text-align: left !important;\n" +
+                        "      }\n" +
+                        "      .preheader .rightColumnContent div,\n" +
+                        "      .preheader .rightColumnContent span,\n" +
+                        "      .footer .rightColumnContent div,\n" +
+                        "      .footer .rightColumnContent span {\n" +
+                        "        text-align: left !important;\n" +
+                        "      }\n" +
+                        "      .preheader .rightColumnContent,\n" +
+                        "      .preheader .leftColumnContent {\n" +
+                        "        font-size: 80% !important;\n" +
+                        "        padding: 5px 0;\n" +
+                        "      }\n" +
+                        "      table.wrapper-mobile {\n" +
+                        "        width: 100% !important;\n" +
+                        "        table-layout: fixed;\n" +
+                        "      }\n" +
+                        "      img.max-width {\n" +
+                        "        height: auto !important;\n" +
+                        "        max-width: 100% !important;\n" +
+                        "      }\n" +
+                        "      a.bulletproof-button {\n" +
+                        "        display: block !important;\n" +
+                        "        width: auto !important;\n" +
+                        "        font-size: 80%;\n" +
+                        "        padding-left: 0 !important;\n" +
+                        "        padding-right: 0 !important;\n" +
+                        "      }\n" +
+                        "      .columns {\n" +
+                        "        width: 100% !important;\n" +
+                        "      }\n" +
+                        "      .column {\n" +
+                        "        display: block !important;\n" +
+                        "        width: 100% !important;\n" +
+                        "        padding-left: 0 !important;\n" +
+                        "        padding-right: 0 !important;\n" +
+                        "        margin-left: 0 !important;\n" +
+                        "        margin-right: 0 !important;\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  </style>\n" +
+                        "      <!--user entered Head Start--><link href=\"https://fonts.googleapis.com/css?family=Viga&display=swap\" rel=\"stylesheet\"><style>\n" +
+                        "    body {font-family: 'Viga', sans-serif;}\n" +
+                        "</style><!--End Head user entered-->\n" +
+                        "    </head>\n" +
+                        "    <body>\n" +
+                        "      <center class=\"wrapper\" data-link-color=\"#000000\" data-body-style=\"font-size:14px; font-family:inherit; color:#000000; background-color:#FFFFFF;\">\n" +
+                        "        <div class=\"webkit\">\n" +
+                        "          <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" class=\"wrapper\" bgcolor=\"#FFFFFF\">\n" +
+                        "            <tbody><tr>\n" +
+                        "              <td valign=\"top\" bgcolor=\"#FFFFFF\" width=\"100%\">\n" +
+                        "                <table width=\"100%\" role=\"content-container\" class=\"outer\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                        "                  <tbody><tr>\n" +
+                        "                    <td width=\"100%\">\n" +
+                        "                      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                        "                        <tbody><tr>\n" +
+                        "                          <td>\n" +
+                        "                            <!--[if mso]>\n" +
+                        "    <center>\n" +
+                        "    <table><tr><td width=\"600\">\n" +
+                        "  <![endif]-->\n" +
+                        "                                    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; max-width:600px;\" align=\"center\">\n" +
+                        "                                      <tbody><tr>\n" +
+                        "                                        <td role=\"modules-container\" style=\"padding:0px 0px 0px 0px; color:#000000; text-align:left;\" bgcolor=\"#FFFFFF\" width=\"100%\" align=\"left\"><table class=\"module preheader preheader-hide\" role=\"module\" data-type=\"preheader\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"display: none !important; mso-hide: all; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0;\">\n" +
+                        "    <tbody><tr>\n" +
+                        "      <td role=\"module-content\">\n" +
+                        "        <p></p>\n" +
+                        "      </td>\n" +
+                        "    </tr>\n" +
+                        "  </tbody></table><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" width=\"100%\" role=\"module\" data-type=\"columns\" style=\"padding:0px 0px 0px 0px;\" bgcolor=\"#dde6de\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr role=\"module-content\">\n" +
+                        "        <td height=\"100%\" valign=\"top\">\n" +
+                        "          <table class=\"column\" width=\"580\" style=\"width:580px; border-spacing:0; border-collapse:collapse; margin:0px 10px 0px 10px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\" border=\"0\" bgcolor=\"\">\n" +
+                        "            <tbody>\n" +
+                        "              <tr>\n" +
+                        "                <td style=\"padding:0px;margin:0px;border-spacing:0;\"><table class=\"module\" role=\"module\" data-type=\"spacer\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"10cc50ce-3fd3-4f37-899b-a52a7ad0ccce\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:0px 0px 40px 0px;\" role=\"module-content\" bgcolor=\"\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"wrapper\" role=\"module\" data-type=\"image\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"f8665f9c-039e-4b86-a34d-9f6d5d439327\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"font-size:6px; line-height:10px; padding:0px 0px 0px 0px;\" valign=\"top\" align=\"center\">\n" +
+                        "          <img class=\"max-width\" border=\"0\" style=\"display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px;\" width=\"130\" alt=\"\" data-proportionally-constrained=\"true\" data-responsive=\"false\" src=\"https://res.cloudinary.com/du9apidv6/image/upload/v1601902927/foodify-logo_hhlwpi.png\" height=\"130\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"spacer\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"10cc50ce-3fd3-4f37-899b-a52a7ad0ccce.1\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:0px 0px 30px 0px;\" role=\"module-content\" bgcolor=\"\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table></td>\n" +
+                        "              </tr>\n" +
+                        "            </tbody>\n" +
+                        "          </table>\n" +
+                        "          \n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"text\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"bff8ffa1-41a9-4aab-a2ea-52ac3767c6f4\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:18px 30px 18px 30px; line-height:40px; text-align:inherit; background-color:#dde6de;\" height=\"100%\" valign=\"top\" bgcolor=\"#dde6de\" role=\"module-content\"><div><div style=\"font-family: inherit; text-align: center\"><span style=\"color: #6fab81; font-size: 40px; font-family: inherit\">Thank you for using our services! Now what?</span></div><div></div></div></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"text\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"2f94ef24-a0d9-4e6f-be94-d2d1257946b0\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:18px 50px 18px 50px; line-height:22px; text-align:inherit; background-color:#dde6de;\" height=\"100%\" valign=\"top\" bgcolor=\"#dde6de\" role=\"module-content\"><div><div style=\"font-family: inherit; text-align: center\"><span style=\"font-size: 16px; font-family: inherit\">Confirm your email address to start using Foodify.&nbsp;</span></div><div></div></div></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"module\" data-role=\"module-button\" data-type=\"button\" role=\"module\" style=\"table-layout:fixed;\" width=\"100%\" data-muid=\"c7bd4768-c1ab-4c64-ba24-75a9fd6daed8\">\n" +
+                        "      <tbody>\n" +
+                        "        <tr>\n" +
+                        "          <td align=\"center\" bgcolor=\"#dde6de\" class=\"outer-td\" style=\"padding:10px 0px 20px 0px;\">\n" +
+                        "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"wrapper-mobile\" style=\"text-align:center;\">\n" +
+                        "              <tbody>\n" +
+                        "                <tr>\n" +
+                        "                <td align=\"center\" bgcolor=\"#eac96c\" class=\"inner-td\" style=\"border-radius:6px; font-size:16px; text-align:center; background-color:inherit;\">\n" +
+                        "                  <a href="+link+" style=\"background-color:#eac96c; border:0px solid #333333; border-color:#333333; border-radius:0px; border-width:0px; color:#000000; display:inline-block; font-size:16px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:20px 30px 20px 30px; text-align:center; text-decoration:none; border-style:solid; font-family:inherit;\" target=\"_blank\">Confirm Email</a>\n" +
+                        "                </td>\n" +
+                        "                </tr>\n" +
+                        "              </tbody>\n" +
+                        "            </table>\n" +
+                        "          </td>\n" +
+                        "        </tr>\n" +
+                        "      </tbody>\n" +
+                        "    </table><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" width=\"100%\" role=\"module\" data-type=\"columns\" style=\"padding:40px 30px 30px 30px;\" bgcolor=\"#dde6de\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr role=\"module-content\">\n" +
+                        "        <td height=\"100%\" valign=\"top\">\n" +
+                        "          <table class=\"column\" width=\"166\" style=\"width:166px; border-spacing:0; border-collapse:collapse; margin:0px 10px 0px 0px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\" border=\"0\" bgcolor=\"\">\n" +
+                        "            <tbody>\n" +
+                        "              <tr>\n" +
+                        "                <td style=\"padding:0px;margin:0px;border-spacing:0;\"><table class=\"wrapper\" role=\"module\" data-type=\"image\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"35f4b6e7-fc49-4a6f-a23c-e84ad33abca4\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"font-size:6px; line-height:10px; padding:0px 0px 0px 0px;\" valign=\"top\" align=\"center\">\n" +
+                        "          <img class=\"max-width\" border=\"0\" style=\"display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px;\" width=\"80\" alt=\"\" data-proportionally-constrained=\"true\" data-responsive=\"false\" src=\"https://res.cloudinary.com/du9apidv6/image/upload/v1601907405/buying_ovr1ch.png\" height=\"80\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"text\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"4f3e6dad-4d49-49b4-b842-97c93e43616f\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:18px 0px 18px 0px; line-height:22px; text-align:inherit;\" height=\"100%\" valign=\"top\" bgcolor=\"\" role=\"module-content\"><div><div style=\"font-family: inherit; text-align: inherit\"><span style=\"font-size: 14px\">Order your favourite dishes!&nbsp;</span></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"><br></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"></div><div></div></div></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table></td>\n" +
+                        "              </tr>\n" +
+                        "            </tbody>\n" +
+                        "          </table>\n" +
+                        "          <table class=\"column\" width=\"166\" style=\"width:166px; border-spacing:0; border-collapse:collapse; margin:0px 10px 0px 10px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\" border=\"0\" bgcolor=\"\">\n" +
+                        "            <tbody>\n" +
+                        "              <tr>\n" +
+                        "                <td style=\"padding:0px;margin:0px;border-spacing:0;\"><table class=\"wrapper\" role=\"module\" data-type=\"image\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"0cb2f52e-e1c0-4b42-a114-04aa36fe57f5\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"font-size:6px; line-height:10px; padding:0px 0px 0px 0px;\" valign=\"top\" align=\"center\">\n" +
+                        "          <img class=\"max-width\" border=\"0\" style=\"display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px;\" width=\"80\" alt=\"\" data-proportionally-constrained=\"true\" data-responsive=\"false\" src=\"https://res.cloudinary.com/du9apidv6/image/upload/v1601907411/market_bjfrc9.png\" height=\"80\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"text\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"9bf90608-97e0-467e-a709-f45d87b0451b\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:18px 0px 18px 0px; line-height:22px; text-align:inherit;\" height=\"100%\" valign=\"top\" bgcolor=\"\" role=\"module-content\"><div><div style=\"font-family: inherit; text-align: inherit\"><span style=\"font-size: 14px\">Cook your favourite dishes and sell them with ease!</span></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"><br></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"></div><div></div></div></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table></td>\n" +
+                        "              </tr>\n" +
+                        "            </tbody>\n" +
+                        "          </table>\n" +
+                        "        <table width=\"166\" style=\"width:166px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 10px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\" border=\"0\" bgcolor=\"\" class=\"column column-2\">\n" +
+                        "      <tbody>\n" +
+                        "        <tr>\n" +
+                        "          <td style=\"padding:0px;margin:0px;border-spacing:0;\"><table class=\"wrapper\" role=\"module\" data-type=\"image\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"231c1abd-75e6-4f22-a697-c5f3819b2b07\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"font-size:6px; line-height:10px; padding:0px 0px 0px 0px;\" valign=\"top\" align=\"center\">\n" +
+                        "          <img class=\"max-width\" border=\"0\" style=\"display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px;\" width=\"80\" alt=\"\" data-proportionally-constrained=\"true\" data-responsive=\"false\" src=\"https://res.cloudinary.com/du9apidv6/image/upload/v1601907404/tracking_z9edub.png\" height=\"80\">\n" +
+                        "        </td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><table class=\"module\" role=\"module\" data-type=\"text\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"table-layout: fixed;\" data-muid=\"e82d5e62-b94c-42bb-a289-4515ec9ecc85\">\n" +
+                        "    <tbody>\n" +
+                        "      <tr>\n" +
+                        "        <td style=\"padding:18px 0px 18px 0px; line-height:22px; text-align:inherit;\" height=\"100%\" valign=\"top\" bgcolor=\"\" role=\"module-content\"><div><div style=\"font-family: inherit; text-align: inherit\"><span style=\"font-size: 14px\">Track your orders live!</span></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"><br></div>\n" +
+                        "<div style=\"font-family: inherit; text-align: inherit\"></div><div></div></div></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table></td>\n" +
+                        "        </tr>\n" +
+                        "      </tbody>\n" +
+                        "    </table></td>\n" +
+                        "      </tr>\n" +
+                        "    </tbody>\n" +
+                        "  </table><div data-role=\"module-unsubscribe\" class=\"module\" role=\"module\" data-type=\"unsubscribe\" style=\"color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;\" data-muid=\"4e838cf3-9892-4a6d-94d6-170e474d21e5\">\n" +
+                        "                                            <div class=\"Unsubscribe--addressLine\"><p class=\"Unsubscribe--senderName\" style=\"font-size:12px; line-height:20px;\">Jonathan Samuel J</p>\n" +
+                        "                                          </div><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"module\" data-role=\"module-button\" data-type=\"button\" role=\"module\" style=\"table-layout:fixed;\" width=\"100%\" data-muid=\"188c3d22-338c-4a35-a298-a7d3957f579d\">\n" +
+                        "      <tbody>\n" +
+                        "        <tr>\n" +
+                        "          <td align=\"center\" bgcolor=\"\" class=\"outer-td\" style=\"padding:0px 0px 20px 0px;\">\n" +
+                        "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"wrapper-mobile\" style=\"text-align:center;\">\n" +
+                        "              <tbody>\n" +
+                        "                <tr>\n" +
+                        "                <td align=\"center\" bgcolor=\"#f5f8fd\" class=\"inner-td\" style=\"border-radius:6px; font-size:16px; text-align:center; background-color:inherit;\"><a href=\"https://www.sendgrid.com/?utm_source=powered-by&utm_medium=email\" style=\"background-color:#f5f8fd; border:1px solid #f5f8fd; border-color:#f5f8fd; border-radius:25px; border-width:1px; color:#a8b9d5; display:inline-block; font-size:10px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:5px 18px 5px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:helvetica,sans-serif;\" target=\"_blank\">♥ POWERED BY TWILIO SENDGRID</a></td>\n" +
+                        "                </tr>\n" +
+                        "              </tbody>\n" +
+                        "            </table>\n" +
+                        "          </td>\n" +
+                        "        </tr>\n" +
+                        "      </tbody>\n" +
+                        "    </table></td>\n" +
+                        "                                      </tr>\n" +
+                        "                                    </tbody></table>\n" +
+                        "                                    <!--[if mso]>\n" +
+                        "                                  </td>\n" +
+                        "                                </tr>\n" +
+                        "                              </table>\n" +
+                        "                            </center>\n" +
+                        "                            <![endif]-->\n" +
+                        "                          </td>\n" +
+                        "                        </tr>\n" +
+                        "                      </tbody></table>\n" +
+                        "                    </td>\n" +
+                        "                  </tr>\n" +
+                        "                </tbody></table>\n" +
+                        "              </td>\n" +
+                        "            </tr>\n" +
+                        "          </tbody></table>\n" +
+                        "        </div>\n" +
+                        "      </center>\n" +
+                        "    \n" +
+                        "  \n" +
+                        "</body></html>"
                 }
                 try{
                     await sgMail.send(msg);
@@ -632,17 +917,20 @@ app.post("/cart",function (req,res) {
 });
 
 app.post('/image', upload.single('photo'), (req, res) => {
-
+    //console.log("hi1");
     if(req.file) {
 
         cloudinary.uploader.upload(req.file.path, function(error, result) {
 
-
+            if(error)
+                console.log(error);
+            //console.log("hi2");
             Item.findOneAndUpdate({name:req.body.somename},{img:result.url},function (err,docs) {
                 if(err)
                     console.log(err);
             });
         });
+        //console.log("hi3");
         forSuc="sell";
         res.redirect("/success");
     }
