@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
     <link rel="stylesheet" href="home_assets/home_css/untitled.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="leaflet-routing-machine.css" />
 </head>
 
 <body>
@@ -43,7 +47,10 @@
             <%for(var i=0;i<docs.length;i++){%>
                     <tr style="position: relative;">
             <td class="text-center"><%=docs[i].name%></td>
-
+            <input id="userLat<%=i%>" value="<%=userLat[i]%>" hidden>
+            <input id="userLong<%=i%>" value="<%=userLong[i]%>" hidden>
+            <input id="itemLat<%=i%>" value="<%=itemLat[i]%>" hidden>
+            <input id="itemLong<%=i%>" value="<%=itemLong[i]%>" hidden>
             <%if(docs[i].active===false){%>
             <form method="post" action="/deliver">
                 <input name="itemName" value="<%=docs[i].name%>" hidden>
@@ -62,7 +69,15 @@
                 <td class="text-center">Delivered!</td>
             <%}%>
             </tr>
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    <div style="position: relative; width: 90%;height:250px;" class="container"><div class="map" id='map<%=i%>'></div>-->
+
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
             <%}%>
+            <input id="num" value="<%=docs.length%>" hidden>
             </tbody>
         </table>
     </div>
@@ -77,12 +92,56 @@
 </footer>
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="leaflet-routing-machine.js"></script>
 <script type="text/javascript">
     $(document).on('click','.navbar-collapse',function(e) {
         if( $(e.target).is('a') ) {
             $(this).collapse('hide');
         }
     });
+
+    // let map=[];
+    // let routes=[];
+    //
+    // for(var i=0;i<$("#num")[0].value;i++) {
+    //     map[i] = L.map('map' + i);
+    //
+    //     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmd2Y2bWdhMWM2YjMybHJzdWkwY2x5eSJ9.409NC2QpFQ1g5so0UMDuXQ', {
+    //         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //         maxZoom: 18,
+    //         id: 'mapbox/streets-v9',
+    //         tileSize: 512,
+    //         zoomOffset: -1,
+    //         accessToken: 'pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2tmd2Y2bWdhMWM2YjMybHJzdWkwY2x5eSJ9.409NC2QpFQ1g5so0UMDuXQ'
+    //     }).addTo(map[i]);
+    //
+    //     routes[i]=L.Routing.control({
+    //         waypoints: [
+    //             L.latLng($("#userLat"+i)[0].value, $("#userLong"+i)[0].value),
+    //             L.latLng($("#itemLat"+i)[0].value, $("#itemLong"+i)[0].value)
+    //         ],
+    //         createMarker: function() { return null; },
+    //         routeWhileDragging: true,
+    //         lineOptions: {styles:[{color: 'black', opacity: 0.15, weight: 10}, {color: 'white', opacity: 0.8, weight: 9}, {color: 'red', opacity: 1, weight: 5}]}
+    //     }).addTo(map[i]);
+    //
+    //     var homeIcon = L.icon({
+    //         iconUrl: '/home.png',
+    //         iconSize: [28, 40],
+    //
+    //         popupAnchor: [-3, -76]
+    //     });
+    //     var shopIcon = L.icon({
+    //         iconUrl: '/cooking.png',
+    //         iconSize: [28, 40],
+    //
+    //         popupAnchor: [-3, -76]
+    //     });
+    //
+    //     L.marker([$("#userLat"+i)[0].value, $("#userLong"+i)[0].value],{icon: homeIcon}).addTo(map[i]);
+    //     L.marker([$("#itemLat"+i)[0].value, $("#itemLong"+i)[0].value],{icon: shopIcon}).addTo(map[i]);
+    // }
 
     var getLocation=function (){
         //console.log("hi");

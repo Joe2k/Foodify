@@ -375,7 +375,7 @@ app.get("/delivery",function (req,res){
             //console.log(userLat[i],userLong[i]);
         }
         //console.log(userLat[0],userLong[0]);
-        res.render("delivery",{docs:docs});
+        res.render("delivery",{docs:docs,userLong:userLong,userLat:userLat,itemLat:itemLat,itemLong:itemLong});
     });
 
 });

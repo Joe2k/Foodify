@@ -163,6 +163,7 @@
     let userName=$("#username")[0].value;
     let ite=$("#num")[0].value;
     let routes=[];
+    let delMarker=[];
     //console.log(userName,ite);
     for(var i=0;i<$("#num")[0].value;i++){
         map[i] = L.map('map'+i);
@@ -254,8 +255,10 @@
 
                         popupAnchor: [-3, -76]
                     });
-
-                    L.marker([data.delLat, data.delLong],{icon: foodIcon}).addTo(map[i]);
+                    if(delMarker[i])
+                        map[i].removeLayer(delMarker[i]);
+                    delMarker[i]=L.marker([data.delLat, data.delLong],{icon: foodIcon});
+                    map[i].addLayer(delMarker[i]);
                     $(".leaflet-routing-container").hide();
 
                     $("#deliveryActive"+i)[0].innerHTML="<img src=\"/delivery-man.png\" style=\"width: 2em; height: 3em;\">";
