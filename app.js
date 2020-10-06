@@ -106,6 +106,7 @@ var forLogout="no";
 var userTransfer="";
 var deliveryLat=0.0;
 var deliveryLong=0.0;
+var phoneName="";
 
 function haversine_distance(lat1, long1, lat2,long2) {
     var R = 6371.0710; // Radius of the Earth in miles
@@ -125,8 +126,8 @@ app.get("/",function (req,res) {
 });
 
 app.get("/phone",function (req,res){
-    console.log(req.user.username);
-    User.find({username:req.user.username},function (err,docs1) {
+    console.log(phoneName);
+    User.find({username:phoneName},function (err,docs1) {
         client.verify.services(serid)
             .verifications
             .create({to: docs1[0].phone, channel: 'sms'})
@@ -134,7 +135,7 @@ app.get("/phone",function (req,res){
     });
 
    res.render("phone",{phoneType:req.body.phoneType});
-
+    phoneName="";
 });
 
 app.get("/login",function (req,res) {
@@ -851,7 +852,7 @@ app.post("/register",async function (req,res) {
                 }
                 try{
                     await sgMail.send(msg);
-
+                    phoneName=req.body.username;
                     res.redirect("/phone");
                 } catch(error){
 
