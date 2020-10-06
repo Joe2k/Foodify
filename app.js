@@ -125,6 +125,7 @@ app.get("/",function (req,res) {
 });
 
 app.get("/phone",function (req,res){
+    console.log(req.user.username);
     User.find({username:req.user.username},function (err,docs1) {
         client.verify.services(serid)
             .verifications
@@ -247,9 +248,15 @@ app.get("/menu/:someurl/:somename",function (req,res) {
             });
         }
 });
+app.get("/search/",function (req,res){
+    console.log("error");
+    res.redirect("/buy");
+});
 
 app.get("/search/:searchpart",function (req,res) {
         const searchname=req.params.searchpart;
+        if(searchname==="")
+            console.log("error");
         Item.find({ name: { $regex: searchname, $options: "i" } }, function(err, docs1) {
             Item.find({ by: { $regex: searchname, $options: "i" } }, function(err, docs2){
                 Item.find(function (err,docs) {
