@@ -26,17 +26,19 @@ A web app to buy and sell food items!
 |----------|-----------|------------|
 | <img src="public/foodify-home.png" alt="Home" width="400" height="auto"> | <img src="public/foodify-login.png" alt="Home" width="400" height="auto"> | <img src="public/foodify-sell.png" alt="Home" width="400" height="auto"> |
 
-
+***
 
 | **Menu Page With Search** | **Menu Page With Items** | **Menu Page With Filters** |
 |----------|-----------|------------|
 | <img src="public/foodify-menu1.png" alt="Home" width="400" height="auto"> | <img src="public/foodify-menu2.png" alt="Home" width="400" height="auto"> | <img src="public/foodify-filter.png" alt="Home" width="400" height="auto"> |
 
-
+***
 
 | **Cart Page** | **My Account Page When Item is Cooking** | **My Account Page When Item is Delivered** |
 |----------|-----------|------------|
 | <img src="public/foodify-cart.png" alt="Delivery" width="400" height="auto"> | <img src="public/foodify-myacc-cooking.png" alt="Home" width="400" height="auto"> | <img src="public/foodify-myacc-delivered.png" alt="Home" width="400" height="auto"> |
+
+***
 
 ## :video_camera: Delivery Demo
 
