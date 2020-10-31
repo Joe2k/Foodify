@@ -2,7 +2,7 @@
     <img src="public/foodify-logo.png" alt="Logo" width="150" height="150" align="right">
 </a>
 
-# Foodify
+# :pizza: Foodify
 A web app to buy and sell food items!
     
 
