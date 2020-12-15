@@ -9,28 +9,22 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const upload = multer({dest: __dirname + '/uploads/images'});
-const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
+const connectDB = require("./server/config/db");
+const connectCloud = require("./server/config/cloudinary");
 
 const app = express();
 
+/* Connect to Cloudinary */
+connectCloud();
+
+/* Connect to Send Grid */
+const sgMail = require("./server/config/sendGrid");
+
 app.set('view engine', 'ejs');
 
-cloudinary.config({
-    cloud_name:"du9apidv6",
-    api_key:"511194793499251",
-    api_secret:"V-FKfZT2hbvXYc2IMP5iSnUcShk"
-});
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const accountSid = process.env.PHONE_ID;
-const authToken = process.env.PHONE_TOKEN;
-const client = require('twilio')(accountSid, authToken);
-var serid;
-
-client.verify.services.create({friendlyName: 'Food App'})
-    .then(service => serid=service.sid);
+const client = require("./server/config/twilio").client;
+const serid = require("./server/config/twilio").serviceId;
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -46,57 +40,18 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb+srv://admin-joe:"+process.env.DB_PASS+"@cluster0.hbzmq.mongodb.net/saleDB?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
-
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    name: String,
-    lat: Number,
-    long: Number,
-    phone: String,
-    orders: Array,
-    selling: Array,
-    emailVerify: Boolean,
-    emailToken: String,
-    phoneVerify: Boolean,
-    orderLocations: Array
-});
-
-userSchema.plugin(passportLocalMongoose);
-
-const User = new mongoose.model("User", userSchema);
-const Item =mongoose.model("Item",{
-    name:String,
-    img:String,
-    by:String,
-    category:String,
-    subcategory:String,
-    discription:String,
-    price:Number,
-    sold:Number,
-    veg:Boolean,
-    lat: Number,
-    long: Number,
-    distance: Number
-});
-const Order= mongoose.model("Order",{
-   name:String,
-   userName: String,
-   active: Boolean,
-   delivered: Boolean
-});
+/* Connect to database */
+const User = require("./server/models/User");
+const Item = require("./server/models/Item");
+const Order = require("./server/models/Order");
+connectDB();
 
 passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-var items={};
+let items = {};
 var totalPrice=0;
 var forLoginPromt="";
 var forSuc="";
